@@ -1,0 +1,197 @@
+% Include the per-supervision info file.
+\input{./infofile.tex}
+
+\documentclass[10pt,\jkfside,a4paper]{article}
+
+% Pull in the template, configured as above.
+\input{../template/template.tex}
+
+% If you have any additional \usepackage commands, or other
+% macros or directives, put them here.  Remember not to edit
+% files in the template directory because any changes will
+% be overwritten when template updates are issued.
+
+\begin{document}
+ 
+% Your work here ....
+
+\begin{examquestion}{1900}{1}{1}
+ \begin{enumerate}
+  \item
+{\bf This is part (a) of the question.}
+
+This is part (a) of your answer.
+
+  \item
+  \begin{enumerate}
+   \item
+{\bf Part (b) has three sub-parts, one ...}
+
+My answer is 42.
+
+   \item
+{\bf ... two ...}
+
+My answer will take 10 million years to compute.
+
+   \item
+{\bf ... and three.}
+
+Oh, bother.
+
+  \end{enumerate}
+
+  \item
+{\bf Give an equation for some scientific thing.}
+
+In your answer, you should number your equations (for example in Equation \ref{eq:demoeqn} below)---even if you don't refer to them in the text---in order that they might be easier to refer to in conversation.
+
+\begin{equation} \label{eq:demoeqn}
+2x_1^2 =  3x_0 + \alpha \times \infty
+\end{equation}
+
+ \end{enumerate}
+\end{examquestion}
+
+\subsection*{Notes}
+\begin{enumerate}
+\item
+Use a full stop after a truncation abbreviation such as ``Prof.\  Dante'' but not after a contraction like ``Dr'' (from Doctor).
+Taking letters out of the middle of a word is called contraction (as opposed to removing letters from the end, which makes an abbreviation).
+Note the use of the escape character before the space, to ensure a longer sentence space is not used erroneously: normally, after a full stop, LaTeX will use the inter-sentence spacing because it thinks that all full stops are the ends of sentences!
+\item
+Never use the double quote character.
+Use one or two back-ticks for opening single or double quotes, and one or two apostrophes for closing quotes, like this ``Hello mum,'' said John.
+\item
+Use \texttt{enumerate} for a numbered list and \texttt{itemize} for a bulleted list.
+For either type of list, introduce each item with \texttt{item}.
+\item
+When used in a sentence, dashes should always occur in pairs.
+If you find yourself tempted to use an odd number of dashes in a sentence, you probably mean to use a colon.
+Note that there are two types of dashes: either the em dash---which looks like this---or the en dash -- which looks like this -- can be used.
+The choice of which to use is largely a matter of style, but you need to be consistent.
+If using the shorter en dash, leave a space between the dash and the words surrounding it; if using the longer em dash, do not use a space.
+Note that a hyphen is not a dash.
+A hyphen is used to hyphenate words.  En dashses are used for ranges such as 10--11am (and do not need surrounding spaces in this context).  Em dashes are used around a few words in a sentence (similar to parentheses).
+\end{enumerate}
+
+\newpage
+
+This is page 2 because we forced a page break.
+If our supervisor wants two-sided documents, this will be an even page.
+
+Other interesting styles are as follows.  You can align several equations at some point (here, the equals signs are aligned).
+
+\begin{align*}
+x + y  &= z                                             \\
+\dots\ &=\ \dots     && \text{a label}                  \\
+  a b  &/ c          && \text{\textsc{exchange} rule}   \\
+p      &< 5          && \text{(note that $p\in\mathbb{R}$)}
+\end{align*}
+
+The `verbatim' environment uses a monospaced font.  It is your responsibility to ensure the text does not run off the right hand side of the page because what appears in the PDF is literally, i.e. verbatim, what you tell the \LaTeX\ compiler to do! (Note that we need to escape the whitespace after the LaTeX command just there: whitespace after commands is usually ignored but we {\em want} a space between ``\LaTeX'' and ``compiler''!)  The following is verbatim:
+
+\begin{verbatim}
+fun fib 0 = 1
+  | fib 1 = 1
+  | fib n = fib (n-1) + fib(n-2);
+\end{verbatim}
+
+You can have headings with identical font and spacing characterists to normal headings but that are not numbered and do not appear in the index: use an asterisk after your `section', `subsection', etc. command.  The following sub-section and sub-sub-section headings are asterisked:
+
+\subsection*{Digital Electronics}
+\subsubsection*{Truth Tables}
+
+You can draw tables!  Use `c' to defines a column with centre-alignment.  Use `l' and `r' for left and right alignment.  The vertical bar (pipe) places a vertical dividing line in the table at the position indicated.  Each row should end with two backslashes: that's how \LaTeX\ knows that you want a new row (remember that (single) newlines in the .tex file are not significant).  Finally, to get horizontal lines, use `hline'.
+
+\begin{tabular}{cc|c}
+$A$ & $B$ & $\overline{A.B}$\\
+\hline
+0   & 0   & 1\\
+0   & 1   & 1\\
+1   & 0   & 1\\
+1   & 1   & 0\\
+\end{tabular}
+
+\begin{tabular}{cc|c}
+$A$ & $B$ & $A\oplus B$\\
+\hline
+0   & 0   & 0\\
+0   & 1   & 1\\
+1   & 0   & 1\\
+1   & 1   & 0\\
+\end{tabular}
+
+
+\subsubsection*{State Transition Tables}
+This example shows how to use `multicolumn', which is text that spans multiple columns of the table.  Using multicolumn with arguments x and yyy causes \LaTeX\ to replace x columns of the outer table with a new set of columns (and vertical lines) indicated by yyy.  A common example is to span 3 columns with a single, centre-aligned value, which is used for `CURRENT STATE' in the table below.
+
+{\centering\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{ccc||cc||ccc}
+\multicolumn{3}{c||}{\textsc{current state}} & \multicolumn{2}{c||}{\textsc{inputs}} & \multicolumn{3}{c}{\textsc{next state}} \\
+Name & $Q_1$ & $Q_0$ & $X$ & $Y$ & Name & $Q_1^{\,\prime}$ & $Q_0^{\,\prime}$\\
+\hhline{===||==||===}
+$S_0$ & 0 & 0 & 0 & 0 & $S_2$ & 1 & 0\\
+$S_0$ & 0 & 0 & 0 & 1 & $S_1$ & 0 & 1\\
+$S_0$ & 0 & 0 & 1 & 0 & $S_2$ & 1 & 0\\
+$S_0$ & 0 & 0 & 1 & 1 & $S_3$ & 1 & 1\\
+\hhline{---||--||---}
+$S_1$ & 0 & 1 & 0 & 0 & $S_0$ & 0 & 0\\
+$S_1$ & 0 & 1 & 0 & 1 & $S_0$ & 0 & 0\\
+$S_1$ & 0 & 1 & 1 & 0 & $S_1$ & 0 & 1\\
+$S_1$ & 0 & 1 & 1 & 1 & $S_2$ & 1 & 0\\
+\hhline{---||--||---}
+$S_2$ & 1 & 0 & 0 & 0 & X     & X & X\\
+$S_2$ & 1 & 0 & 0 & 1 & X     & X & X\\
+$S_2$ & 1 & 0 & 1 & 0 & $S_2$ & 1 & 0\\
+$S_2$ & 1 & 0 & 1 & 1 & X     & X & X\\
+\hhline{---||--||---}
+$S_3$ & 1 & 1 & 0 & 0 & $S_0$ & 0 & 0\\
+$S_3$ & 1 & 1 & 0 & 1 & $S_2$ & 1 & 0\\
+$S_3$ & 1 & 1 & 1 & 0 & $S_1$ & 0 & 1\\
+$S_3$ & 1 & 1 & 1 & 1 & $S_3$ & 1 & 1\\
+\end{tabular}}
+
+\newpage
+
+\subsection*{siunitx}
+
+These examples, taken from \url{http://anorien.csc.warwick.ac.uk/mirrors/CTAN/macros/latex/contrib/siunitx/siunitx.pdf}, show how to use SI units that render properly (text slant and spacing):
+
+\num{12345,67890} \\
+\num{.3e45} \\
+
+\si{kg.m.s^{-1}} \\
+\si{\kilogram\metre\per\second} \\
+\si[per-mode=symbol]
+{\kilogram\metre\per\second} \\
+\si[per-mode=symbol]{\kilogram\metre\per\ampere\per\second}
+
+\numlist{10;20;30} \\
+\SIlist{0.13;0.67;0.80}{\milli\metre} \\
+\numrange{10}{20} \\
+\SIrange{0.13}{0.67}{\milli\metre}
+
+\si{\kilo\gram\metre\per\square\second} \\
+\si{\gram\per\cubic\centi\metre} \\
+\si{\square\volt\cubic\lumen\per\farad} \\
+\si{\metre\squared\per\gray\cubic\lux} \\
+\si{\henry\second}
+
+\ang{10} \\
+\ang{12.3} \\
+\ang{4,5} \\
+\ang{1;2;3} \\
+\ang{;;1} \\
+\ang{+10;;} \\
+\ang{-0;1;}
+
+\SI[mode=text]{1.23}{J.mol^{-1}.K^{-1}} \\
+\SI{.23e7}{\candela} \\
+\SI[per-mode=symbol]{1.99}[\$]{\per\kilogram} \\
+\SI[per-mode=fraction]{1,345}{\coulomb\per\mole}
+
+
+
+\end{document}
+

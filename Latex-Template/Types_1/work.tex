@@ -1,0 +1,812 @@
+% Include the per-supervision info file.
+\input{./infofile.tex}
+
+\documentclass[10pt,\jkfside,a4paper]{article}
+
+% Pull in the template, configured as above.
+\input{../template/template.tex}
+
+% If you have any additional \usepackage commands, or other
+% macros or directives, put them here.  Remember not to edit
+% files in the template directory because any changes will
+% be overwritten when template updates are issued.
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{minted}
+\usepackage[breakable]{tcolorbox}
+\usepackage{upgreek}
+\usepackage{stmaryrd}
+
+\newcommand{\answer}[1]{
+    \begin{tcolorbox}[colframe=black, colback=white, sharp corners, boxrule=0.2mm, breakable]
+        #1
+    \end{tcolorbox}
+}
+
+
+% Right-aligned mark allocation, e.g. \qmarks{4 marks}
+\newcommand{\qmarks}[1]{\hspace*{\fill}[#1]}
+
+\begin{document}
+
+% Your work here.
+% See example_sv/example.tex for LaTeX examples.
+
+\begin{enumerate} 
+    \item
+    \begin{enumerate} 
+        \item
+        Extend the logical relation to support products
+
+        \answer{ 
+            \[ 
+                \mathsf{Halt}_{X \times Y} = \{ e | \mathsf{fst} e \in \mathsf{Halt}_X \wedge \mathsf{snd} e \in \mathsf{Halt}_Y \}
+            \]
+        }
+
+        \item
+        Extend the logical relation to support sums 
+
+        \answer{ 
+            \[ 
+                \mathsf{Halt}_{X + Y} = \{ e | \exists v. e \to v \wedge \forall e_1, e_2 \in \mathsf{Halt}_C. \mathsf{case}(e, L x \to e_2, )\in \mathsf{Halt}_C \}
+            \]
+        }
+
+    \end{enumerate}
+
+    \item
+    \begin{enumerate} 
+        \item
+        Prove the regularity lemma
+
+        \answer{
+            \textbf{RTP:} if $\Theta \vdash \Gamma\ \mathsf{ctx}$ and $\Theta ; \Gamma \vdash e : A$, then $\Theta \vdash A\ \mathsf{type}$.
+
+            That is, $\forall \Theta, \Gamma, e, A.\; \Theta \vdash \Gamma\ \mathsf{ctx} \wedge \Theta ; \Gamma \vdash e : A \Rightarrow \Theta \vdash A\ \mathsf{type}$.
+
+            We proceed by rule induction on $\Theta ; \Gamma \vdash e : A$, defining
+            \[
+                \Phi(\Theta, \Gamma, e, A) \triangleq \Theta \vdash \Gamma\ \mathsf{ctx} \Rightarrow \Theta \vdash A\ \mathsf{type}
+            \]
+            We consider the various cases.
+
+            \textit{Variable case:}
+            \[
+                \frac{x : A \in \Gamma}{\Theta ; \Gamma \vdash x : A}
+            \]
+            Suppose $\Theta \vdash \Gamma\ \mathsf{ctx}$ \hfill (1) \\
+            and $x : A \in \Gamma$. \hfill (2)
+
+            \textbf{RTP:} $\Theta \vdash A\ \mathsf{type}$.
+
+            By (1) and (2), $\Theta \vdash \Gamma', x : A\ \mathsf{ctx}$, where $\Gamma = \Gamma', x : A, \Gamma''$.
+
+            By inversion, $\Theta \vdash \Gamma'\ \mathsf{ctx} \wedge \Theta \vdash A\ \mathsf{type}$.
+
+            \textit{Abstraction case:}
+            \[
+                \frac{\Theta \vdash A\ \mathsf{type} \quad \Theta ; \Gamma, x : A \vdash e : B}{\Theta ; \Gamma \vdash \lambda x : A.\, e : A \to B}
+            \]
+            Suppose that $\Phi(\Theta, (\Gamma, x : A), e, B)$ holds, that is, $\Theta \vdash \Gamma, x : A\ \mathsf{ctx} \Rightarrow \Theta \vdash B\ \mathsf{type}$. \hfill (3)
+
+            Further suppose $\Theta \vdash A\ \mathsf{type}$. \hfill (1)
+
+            \textbf{RTP:} $\Phi(\Theta, \Gamma, \lambda x : A.\, e, A \to B)$ holds.
+
+            Suppose $\Theta \vdash \Gamma\ \mathsf{ctx}$. \hfill (2)
+
+            \textbf{RTP:} $\Theta \vdash A \to B\ \mathsf{type}$.
+
+            By (1) and (2), $\Theta \vdash \Gamma, x : A\ \mathsf{ctx}$. \hfill (4)
+
+            By (3) and (4), $\Theta \vdash B\ \mathsf{type}$. \hfill (5)
+
+            By (5) and (1), $\Theta \vdash A \to B\ \mathsf{type}$.
+
+            \textit{Application case:}
+            \[
+                \frac{\Theta ; \Gamma \vdash e : A \to B \quad \Theta ; \Gamma \vdash e' : A}{\Theta ; \Gamma \vdash e\;e' : B}
+            \]
+            Suppose $\Phi(\Theta, \Gamma, e, A \to B) \wedge \Phi(\Theta, \Gamma, e', A)$.
+
+            \textbf{RTP:} $\Phi(\Theta, \Gamma, e\;e', B)$, that is, $\Theta \vdash \Gamma\ \mathsf{ctx} \Rightarrow \Theta \vdash B\ \mathsf{type}$.
+
+            Suppose $\Theta \vdash \Gamma\ \mathsf{ctx}$. Then, $\Theta \vdash A \to B\ \mathsf{type} \wedge \Theta \vdash A\ \mathsf{type}$. \hfill (1)
+
+            By (1), $\Theta \vdash A\ \mathsf{type} \wedge \Theta \vdash B\ \mathsf{type}$.
+
+            \textit{Type abstraction case:}
+            \[
+                \frac{\Theta, \alpha ; \Gamma \vdash e : B}{\Theta ; \Gamma \vdash \Lambda \alpha.\, e : \forall \alpha.\, B}
+            \]
+            \textbf{IH:} $\Phi((\Theta, \alpha), \Gamma, e, B)$, that is, $\Theta, \alpha \vdash \Gamma\ \mathsf{ctx} \Rightarrow \Theta, \alpha \vdash B\ \mathsf{type}$. \hfill (2)
+
+            \textbf{RTP:} $\Phi(\Theta, \Gamma, \Lambda \alpha.\, e, \forall \alpha.\, B)$, that is, $\Theta \vdash \Gamma\ \mathsf{ctx} \Rightarrow \Theta \vdash \forall \alpha.\, B\ \mathsf{type}$.
+
+            Suppose $\Theta \vdash \Gamma\ \mathsf{ctx}$. \hfill (1)
+
+            By (1) and weakening, $\Theta, \alpha \vdash \Gamma\ \mathsf{ctx}$. \hfill (3)
+
+            By (2) and (3), $\Theta, \alpha \vdash B\ \mathsf{type}$. \hfill (4)
+
+            By (4), $\Theta \vdash \forall \alpha.\, B\ \mathsf{type}$.
+
+            \textit{Type application case:}
+            \[
+                \frac{\Theta ; \Gamma \vdash e : \forall \alpha.\, B \quad \Theta \vdash A\ \mathsf{type}}{\Theta ; \Gamma \vdash e\;A : [A / \alpha] B}
+            \]
+            \textbf{IH:} $\Phi(\Theta, \Gamma, e, \forall \alpha.\, B)$, that is, $\Theta \vdash \Gamma\ \mathsf{ctx} \Rightarrow \Theta \vdash \forall \alpha.\, B\ \mathsf{type}$. \hfill (1)
+
+            Assume $\Theta \vdash A\ \mathsf{type}$. \hfill (2)
+
+            \textbf{RTP:} $\Phi(\Theta, \Gamma, e\;A, [A / \alpha] B)$.
+
+            Assume $\Theta \vdash \Gamma\ \mathsf{ctx}$. \hfill (3)
+
+            \textbf{RTP:} $\Theta \vdash [A / \alpha] B\ \mathsf{type}$.
+
+            By (3) and (1), $\Theta \vdash \forall \alpha.\, B\ \mathsf{type}$. \hfill (4)
+
+            By (4) and inversion, $\Theta, \alpha \vdash B\ \mathsf{type}$. \hfill (5)
+
+            By (5), (2) and substitution, $\Theta \vdash [A / \alpha] B\ \mathsf{type}$.
+        }
+
+        \item
+        Define a Church Encoding for the unit type
+
+        \answer{ 
+            $\forall \alpha. \alpha \to \alpha$
+        }
+
+        \item
+        Define a Church Encoding for the empty type
+
+        \answer{ 
+            $\forall \alpha. \alpha$.
+        }
+
+        \item
+        Define a Church Encoding for the binary trees
+
+        \answer{ 
+            $\forall \alpha. \alpha \to (X \to \alpha \to \alpha \to \alpha) \to \alpha$
+        }
+
+    \end{enumerate}
+
+    \item
+    \begin{enumerate} 
+        \item
+        Prove the other direction of the closure property of the $\Theta \vdash \forall \alpha. A \mathsf{type}$ case. 
+
+        \answer{ 
+            \textbf{RTP:} if $e \to e'$ and $e \in \llbracket \Theta \vdash \forall \alpha . A \mathsf{type} \rrbracket \theta$, then $e' \in \llbracket \Theta \vdash \forall \alpha . A \mathsf{type} \rrbracket \theta$
+
+            We note that we are using rule induction on the well-formed property of a type in order to prove this property. Hence, we can define 
+            \[ 
+                \Phi(\Theta, A) \triangleq e \to e' \Rightarrow e \in \llbracket \Theta \vdash \forall \alpha . A \mathsf{type} \rrbracket \theta \Leftrightarrow e' \in \llbracket \Theta \vdash \forall \alpha . A \mathsf{type} \rrbracket \theta
+            \]
+
+            Assume $\Phi(\Theta, \alpha, A)$. RTP: $\Phi(\Theta, \forall \alpha. A)$
+
+            Suppose $e \to e'$ and $e \in \llbracket \Theta \vdash \forall \alpha . A \mathsf{type} \rrbracket \theta$
+
+            By definition, $\forall C, X, e\ C \in \llbracket \Theta, \alpha \vdash A \mathsf{type} \rrbracket (\theta, X / \alpha)$
+
+            Let $C, X$ be arbitrary. By the congruence rule, $e \ C \rightarrow e' C$. By the induction hypothesis then, $e\ C \in \llbracket \Theta, \alpha \vdash A \mathsf{type} \rrbracket (\theta, X / \alpha)$. Hence, by definition,  $e' \in \llbracket \Theta \vdash \forall \alpha . A \mathsf{type} \rrbracket \theta$
+        }
+
+        \item
+        Prove the other direction of the substitution property of the $\Theta \vdash \forall \alpha. A \mathsf{type}$ case. 
+
+        \answer{ 
+            \textbf{RTP:} If $\Theta \vdash A\ \mathsf{type}$ and $\Theta, \alpha \vdash B\ \mathsf{type}$, then $\llbracket \Theta \vdash [A / \alpha] B\ \mathsf{type}\rrbracket \theta = \llbracket \Theta, \alpha \vdash B\ \mathsf{type} \rrbracket (\theta, \llbracket \Theta \vdash A \ \mathsf{type} \rrbracket \theta / \alpha)$
+
+            We proceed by induction on the well-formed property of a type. We define: 
+            \begin{align*}
+                & \Phi(\Theta, B) \triangleq \Theta \vdash A\ \mathsf{type} \wedge \Theta, \alpha \vdash B\ \mathsf{type} \Rightarrow {} \\
+                & \quad \llbracket \Theta \vdash [A / \alpha] B\ \mathsf{type} \rrbracket \theta \\
+                & \quad = \llbracket \Theta, \alpha \vdash B\ \mathsf{type} \rrbracket (\theta, \llbracket \Theta \vdash A\ \mathsf{type} \rrbracket \theta / \alpha)
+            \end{align*}
+
+            We assume $\Phi((\Theta, \beta), B)$. We want to prove $\Phi(\Theta, \forall \beta.\, B)$.
+
+            \textbf{($\Rightarrow$)} Suppose
+            \[
+                e \in \llbracket \Theta \vdash [A / \alpha](\forall \beta.\, B)\ \mathsf{type} \rrbracket \theta \tag{1}
+            \]
+            \textbf{RTP:} $e \in \llbracket \Theta, \alpha \vdash \forall \beta.\, B\ \mathsf{type} \rrbracket (\theta, \llbracket \Theta \vdash A\ \mathsf{type} \rrbracket \theta / \alpha)$, that is, by definition, for all $C, X$,
+            \begin{align*}
+                e\;C \in{} & \llbracket \Theta, \alpha, \beta \vdash B\ \mathsf{type} \rrbracket \\
+                & \quad (\theta, \llbracket \Theta \vdash A\ \mathsf{type} \rrbracket \theta / \alpha, X / \beta)
+            \end{align*}
+            By (1) and definition, for all $D, Y$,
+            \[
+                e\;D \in \llbracket \Theta, \beta \vdash [A / \alpha] B\ \mathsf{type} \rrbracket (\theta, Y / \beta)
+            \]
+            Let $D, Y$ be arbitrary. Then
+            \[
+                e\;D \in \llbracket \Theta, \beta \vdash [A / \alpha] B\ \mathsf{type} \rrbracket (\theta, Y / \beta) \tag{2}
+            \]
+            By (2) and induction,
+            \begin{align*}
+                e\;D \in{} & \llbracket \Theta, \beta, \alpha \vdash B\ \mathsf{type} \rrbracket \\
+                & \quad (\theta, Y / \beta, \llbracket \Theta, \beta \vdash A\ \mathsf{type} \rrbracket (\theta, Y / \beta) / \alpha)
+            \end{align*}
+            By weakening and exchange,
+            \begin{align*}
+                e\;D \in{} & \llbracket \Theta, \alpha, \beta \vdash B\ \mathsf{type} \rrbracket \\
+                & \quad (\theta, \llbracket \Theta \vdash A\ \mathsf{type} \rrbracket \theta / \alpha, Y / \beta)
+            \end{align*}
+            Since $D, Y$ were arbitrary, this is exactly the RTP.
+        }
+
+        \item
+        Prove the fundamental lemma for the for-all introduction case.
+
+        \answer{
+            We proceed by rule induction on the typing relation. We define $\Phi(\vec{\alpha}, \overrightarrow{x_i : A_i}, e, B)$ to be such that for all $\theta, \vec{e}, \vec{C}$, if $\theta$ interprets $\vec{\alpha}$, $\vec{\alpha} \vdash \overrightarrow{x_i : A_i}\ \mathsf{ctx}$ and $\forall x_i : A_i \in \overrightarrow{x_i : A_i}.\; e_i \in \llbracket \Theta \vdash A_i\ \mathsf{type} \rrbracket \theta$, then
+            \[
+                [C_1/\alpha_1, \ldots, C_k/\alpha_k][e_1/x_1, \ldots, e_n/x_n]\,e \in \llbracket \Theta \vdash B\ \mathsf{type} \rrbracket \theta
+            \]
+            We consider the rule for type abstraction:
+            \[
+                \frac{\Theta, \alpha ; \Gamma \vdash e : A}{\Theta ; \Gamma \vdash \Lambda \alpha.\, e : \forall \alpha.\, A}
+            \]
+            Assume $\Phi((\Theta, \alpha), \Gamma, e, A)$, that is, for all $\theta, \vec{e}, \vec{C}$, if $\theta$ interprets $(\Theta, \alpha)$, $\Theta, \alpha \vdash \Gamma\ \mathsf{ctx}$ and $\forall x_i : A_i \in \Gamma.\; e_i \in \llbracket \Theta, \alpha \vdash A_i\ \mathsf{type} \rrbracket \theta$, then
+            \[
+                [C_1/\alpha_1, \ldots, C_k/\alpha_k, C_{k+1}/\alpha][e_1/x_1, \ldots, e_n/x_n]\,e \in \llbracket \Theta, \alpha \vdash A\ \mathsf{type} \rrbracket \theta
+            \]
+            \textbf{RTP:} $\Phi(\Theta, \Gamma, \Lambda \alpha.\, e, \forall \alpha.\, A)$.
+
+            Let $\theta', \vec{e}, \vec{C}$ be arbitrary. Suppose $\Theta \vdash \Gamma\ \mathsf{ctx}$, \hfill (1) \\
+            $\theta'$ interprets $\Theta$, \hfill (2) \\
+            and $\forall x_i : A_i \in \Gamma.\; e_i \in \llbracket \Theta \vdash A_i\ \mathsf{type} \rrbracket \theta'$.
+
+            \textbf{RTP:}
+            \[
+                [C_1/\alpha_1, \ldots, C_k/\alpha_k][e_1/x_1, \ldots, e_n/x_n]\,\Lambda \alpha.\, e \in \llbracket \Theta \vdash \forall \alpha.\, A\ \mathsf{type} \rrbracket \theta'
+            \]
+            Equivalently, prove that for all types $B$ and semantic types $X$,
+            \[
+                [C_1/\alpha_1, \ldots, C_k/\alpha_k, B/\alpha][e_1/x_1, \ldots, e_n/x_n]\,e \in \llbracket \Theta, \alpha \vdash A\ \mathsf{type} \rrbracket (\theta', X/\alpha)
+            \]
+            By (1) and weakening, $\Theta, \alpha \vdash \Gamma\ \mathsf{ctx}$.
+
+            Let $X, B$ be arbitrary. $(\theta', X/\alpha)$ interprets $(\Theta, \alpha)$ since (2).
+
+            By the induction hypothesis, 
+            \[
+                [C_1/\alpha_1, \ldots, C_k/\alpha_k, B/\alpha][e_1/x_1, \ldots, e_n/x_n]\,e \in \llbracket \Theta, \alpha \vdash A\ \mathsf{type} \rrbracket (\theta', X/\alpha)
+            \]
+            and we are done.
+        }
+    \end{enumerate}
+\end{enumerate}
+
+\begin{examquestion}{2024}{8}{13}
+    Consider the simply-typed lambda calculus with only function types and boolean
+    types, with true, false, and if-then-else term formers for the boolean type.
+
+    \begin{enumerate}
+        \item
+            Define a logical relation suitable for establishing the termination of
+            programs in this language. \qmarks{4 marks}
+
+            \answer{ 
+                We note that the types in this language is defined such that: 
+
+                \[ 
+                    T := \mathbb{B} \  |\  A \to B 
+                \]
+
+                We hence denote the logical relation as such: 
+
+                \begin{align*} 
+                    \mathsf{Halt}_{\mathbb{B}} &= \{e | \exists v \in \mathbb{B}. e \to^* v\} \\ 
+                    \mathsf{Halt}_{A \to B} &= \{e | \exists v \in A \to B. e \to^* v \wedge \forall e' \in \mathsf{Halt}_A,  e e' \in \mathsf{Halt}_B\} \\ 
+                \end{align*}
+            }
+
+        \item
+            State the closure property of the logical relation. \qmarks{2 marks}
+
+            \answer{ 
+                If $e \to e'$, then $e \in \mathsf{Halt}_A$ if and only if $e' \in \mathsf{Halt}_A$. 
+            }
+
+        \item
+            Prove closure for the case of the boolean type. \qmarks{6 marks}
+
+            \answer{
+                \textbf{RTP:} if $e \to e'$, then $e \in \mathsf{Halt}_{\mathbb{B}}$ if and only if $e' \in \mathsf{Halt}_{\mathbb{B}}$.
+
+                Suppose $e \to e'$. We show $e \in \mathsf{Halt}_{\mathbb{B}} \Leftrightarrow e' \in \mathsf{Halt}_{\mathbb{B}}$.
+
+                \textbf{($\Rightarrow$)} Suppose that $e \in \mathsf{Halt}_{\mathbb{B}}$. We want to show that $e' \in \mathsf{Halt}_{\mathbb{B}}$.
+                By definition, $e \to^* \mathsf{True}$ or $e \to^* \mathsf{False}$. We approach this by cases.
+
+                \textit{Case 1:} $e \to^* \mathsf{True}$. By the assumption that $e \to e'$, $e$ is not a value, so $e \to e''$ and $e'' \to^* \mathsf{True}$ for some $e''$. As the simply typed lambda calculus is deterministic, we can conclude that $e'' = e'$, so $e' \to^* \mathsf{True}$.
+
+                \textit{Case 2:} $e \to^* \mathsf{False}$. Analogous to Case 1.
+
+                \textbf{($\Leftarrow$)} Suppose that $e' \in \mathsf{Halt}_{\mathbb{B}}$. We want to show that $e \in \mathsf{Halt}_{\mathbb{B}}$.
+                By definition, $e' \to^* \mathsf{True}$ or $e' \to^* \mathsf{False}$.
+                By our assumption that $e \to e'$, it follows that $e \to^* \mathsf{True}$ or $e \to^* \mathsf{False}$.
+            }
+
+        \item
+            State the fundamental lemma for this language. \qmarks{2 marks}
+
+            \answer{ 
+                The fundamental lemma for this language would state: 
+
+                If $x_1 : A_1, \ldots, x_n : A_n \vdash e : C \wedge \forall i \in \{ 1, \ldots, n \}. v_i \in \mathsf{Halt}_{A_i}$, then $[v_1 / x_1, \ldots, v_n / x_n] e \in \mathsf{Halt}_{C}$
+            }
+
+        \item
+            Prove the fundamental lemma for the if-then-else case. \qmarks{6 marks}
+
+            \answer{
+                To prove the fundamental lemma, we proceed by rule induction on the inductively defined set for the simply typed lambda calculus with only function types and boolean types. We define our induction hypothesis to be:
+                \begin{align*}
+                    \Phi(\Gamma, e, A) \triangleq{} & \Gamma = x_1 : A_1, \ldots, x_n : A_n \wedge (\forall i \in \{1, \ldots, n\}.\; v_i \in \mathsf{Halt}_{A_i}) \\
+                    & \quad \Rightarrow [v_1/x_1, \ldots, v_n/x_n]\,e \in \mathsf{Halt}_A
+                \end{align*}
+                We consider the rule for if-then-else:
+                \[
+                    \frac{\Gamma \vdash e_1 : \mathbb{B} \quad \Gamma \vdash e_2 : X \quad \Gamma \vdash e_3 : X}{\Gamma \vdash \mathsf{if}\ e_1\ \mathsf{then}\ e_2\ \mathsf{else}\ e_3 : X}
+                \]
+                We assume $\Phi(\Gamma, e_1, \mathbb{B})$, $\Phi(\Gamma, e_2, X)$ and $\Phi(\Gamma, e_3, X)$.
+
+                \textbf{RTP:} $\Phi(\Gamma, \mathsf{if}\ e_1\ \mathsf{then}\ e_2\ \mathsf{else}\ e_3, X)$.
+
+                Suppose $\Gamma = x_1 : A_1, \ldots, x_n : A_n$ and $\forall i \in \{1, \ldots, n\}.\; v_i \in \mathsf{Halt}_{A_i}$. By the induction hypotheses,
+                \begin{align*}
+                    [v_1/x_1, \ldots, v_n/x_n]\,e_1 &\in \mathsf{Halt}_{\mathbb{B}} \\
+                    [v_1/x_1, \ldots, v_n/x_n]\,e_2 &\in \mathsf{Halt}_X \\
+                    [v_1/x_1, \ldots, v_n/x_n]\,e_3 &\in \mathsf{Halt}_X
+                \end{align*}
+                By definition, $[v_1/x_1, \ldots, v_n/x_n]\,e_1 \to^* \mathsf{True}$ or $[v_1/x_1, \ldots, v_n/x_n]\,e_1 \to^* \mathsf{False}$. We proceed by cases.
+
+                \textit{Case 1:} $[v_1/x_1, \ldots, v_n/x_n]\,e_1 \to^* \mathsf{True}$. Then
+                \begin{align*}
+                    & [v_1/x_1, \ldots, v_n/x_n]\,(\mathsf{if}\ e_1\ \mathsf{then}\ e_2\ \mathsf{else}\ e_3) \\
+                    &\to^* [v_1/x_1, \ldots, v_n/x_n]\,(\mathsf{if}\ \mathsf{True}\ \mathsf{then}\ e_2\ \mathsf{else}\ e_3) && \text{by the congruence rule} \\
+                    &\to [v_1/x_1, \ldots, v_n/x_n]\,e_2 && \text{by the reduction rule}
+                \end{align*}
+                By the closure rule, since $[v_1/x_1, \ldots, v_n/x_n]\,e_2 \in \mathsf{Halt}_X$, we have $[v_1/x_1, \ldots, v_n/x_n]\,(\mathsf{if}\ e_1\ \mathsf{then}\ e_2\ \mathsf{else}\ e_3) \in \mathsf{Halt}_X$.
+
+                \textit{Case 2:} $[v_1/x_1, \ldots, v_n/x_n]\,e_1 \to^* \mathsf{False}$. Analogous to Case 1.
+            }
+
+    \end{enumerate}
+
+\end{examquestion}
+
+\begin{examquestion}{2023}{8}{13}
+    Consider G\"odel's T, the simply-typed lambda calculus with function and natural
+    number types, with zero, successor and iterator term formers for the natural
+    number type.
+
+    \begin{enumerate}
+        \item
+            Define a logical relation suitable for establishing the termination of
+            closed programs in this language. \qmarks{5 marks}
+
+            \answer{ 
+                We note that the types in this language is defined such that: 
+
+                \[ 
+                    T := \mathbb{N} \  |\  A \to B 
+                \]
+
+                We hence denote the logical relation as such: 
+
+                \begin{align*} 
+                    \mathsf{R}_{\mathbb{N}} &= \{e | \exists k \in \mathbb{N}. e \to^* s^k(z)\} \\ 
+                    \mathsf{R}_{A \to B} &= \{e | \exists v \in A \to B. e \to^* v \wedge \forall e' \in \mathsf{R}_A,  e e' \in \mathsf{R}_B\} \\ 
+                \end{align*}
+            }
+
+        \item
+            State the fundamental lemma for this language. \qmarks{3 marks}
+
+            \answer{
+                The fundamental lemma for this language would state: 
+
+                If $x_1 : A_1, \ldots, x_n : A_n \vdash e : C \wedge \forall i \in \{ 1, \ldots, n \}. v_i \in \mathsf{R}_{A_i}$, then $[v_1 / x_1, \ldots, v_n / x_n] e \in \mathsf{R}_{C}$
+            }
+
+        \item
+            State formally what it means for a set of terms $X$ to be ``closed under
+            reduction''. \qmarks{2 marks}
+
+            \answer{ 
+                If $e \to e'$, then $e \in X$ if and only if $e' \in X$. 
+            }
+
+        \item
+            Prove the fundamental lemma holds for the iterator case. \qmarks{10 marks}
+
+            \answer{
+                To prove the fundamental lemma, we proceed by rule induction on the inductively defined set for the simply typed lambda calculus with only function types and natural number types. We define our induction hypothesis to be:
+                \begin{align*}
+                    \Phi(\Gamma, e, A) \triangleq{} & \Gamma = x_1 : A_1, \ldots, x_n : A_n \wedge (\forall i \in \{1, \ldots, n\}.\; v_i \in \mathsf{R}_{A_i}) \\
+                    & \quad \Rightarrow [v_1/x_1, \ldots, v_n/x_n]\,e \in \mathsf{R}_A
+                \end{align*}
+                We consider the rule for the iterator:
+                \[
+                    \frac{\Gamma \vdash e_1 : \mathbb{N} \quad \Gamma \vdash e_2 : X \quad \Gamma, x:X \vdash e_3 : X}{\Gamma \vdash \mathsf{iter}(e_1,\ z \to e_2,\ s(x) \to e_3) : X}
+                \]
+                We assume $\Phi(\Gamma, e_1, \mathbb{N})$, $\Phi(\Gamma, e_2, X)$ and $\Phi((\Gamma, x:X), e_3, X)$.
+
+                \textbf{RTP:} $\Phi(\Gamma, \mathsf{iter}(e_1,\ z \to e_2,\ s(x) \to e_3), X)$.
+
+                Suppose $\Gamma = x_1 : A_1, \ldots, x_n : A_n$ and $\forall i \in \{1, \ldots, n\}.\; v_i \in \mathsf{R}_{A_i}$. By the induction hypotheses,
+                \begin{align*}
+                    [v_1/x_1, \ldots, v_n/x_n]\,e_1 &\in \mathsf{R}_{\mathbb{N}} \\
+                    [v_1/x_1, \ldots, v_n/x_n]\,e_2 &\in \mathsf{R}_X \\
+                    [v_1/x_1, \ldots, v_n/x_n, v/x]\,e_3 &\in \mathsf{R}_X \quad \text{for all } v \in \mathsf{R}_X
+                \end{align*}
+                By definition of $\mathsf{R}_{\mathbb{N}}$, $[v_1/x_1, \ldots, v_n/x_n]\,e_1 \to^* s^k(z)$ for some $k$. Hence, by the congruence rules,
+                \begin{align*}
+                    & [v_1/x_1, \ldots, v_n/x_n]\,\mathsf{iter}(e_1,\ z \to e_2,\ s(x) \to e_3) \\
+                    &\to^* [v_1/x_1, \ldots, v_n/x_n]\,\mathsf{iter}(s^k(z),\ z \to e_2,\ s(x) \to e_3)
+                \end{align*}
+                By closure, we can equivalently prove the result by proving that $[v_1/x_1, \ldots, v_n/x_n]\,\mathsf{iter}(s^k(z),\ z \to e_2,\ s(x) \to e_3) \in \mathsf{R}_X$. To prove this, we proceed by mathematical induction on $k$.
+
+                \textit{Base case:} $k = 0$. By the reduction rules,
+                \begin{align*}
+                    & [v_1/x_1, \ldots, v_n/x_n]\,\mathsf{iter}(z,\ z \to e_2,\ s(x) \to e_3) \\
+                    &\to [v_1/x_1, \ldots, v_n/x_n]\,e_2
+                \end{align*}
+                and $[v_1/x_1, \ldots, v_n/x_n]\,e_2 \in \mathsf{R}_X$ by the induction hypothesis for $e_2$, so by closure we are done.
+
+                \textit{Inductive case:} $k = m + 1$. Assume that $[v_1/x_1, \ldots, v_n/x_n]\,\mathsf{iter}(s^m(z),\ z \to e_2,\ s(x) \to e_3) \in \mathsf{R}_X$.
+                We want to prove that $[v_1/x_1, \ldots, v_n/x_n]\,\mathsf{iter}(s^{m+1}(z),\ z \to e_2,\ s(x) \to e_3) \in \mathsf{R}_X$. By the reduction rules,
+                \begin{align*}
+                    & [v_1/x_1, \ldots, v_n/x_n]\,\mathsf{iter}(s^{m+1}(z),\ z \to e_2,\ s(x) \to e_3) \\
+                    &\to [v_1/x_1, \ldots, v_n/x_n]\,[\mathsf{iter}(s^m(z),\ z \to e_2,\ s(x) \to e_3)/x]\,e_3
+                \end{align*}
+                Let $v = [v_1/x_1, \ldots, v_n/x_n]\,\mathsf{iter}(s^m(z),\ z \to e_2,\ s(x) \to e_3)$. By the inner induction hypothesis, $v \in \mathsf{R}_X$, so by the induction hypothesis for $e_3$, $[v_1/x_1, \ldots, v_n/x_n, v/x]\,e_3 \in \mathsf{R}_X$. This is exactly the term above, so by closure we are done.
+            }
+
+    \end{enumerate}
+
+\end{examquestion}
+
+\begin{examquestion}{2021}{9}{15}
+    \begin{enumerate}
+        \item
+            In a simply-typed lambda calculus augmented with first-class continuations,
+            booleans, a list type and its iterator (i.e., fold, but not full recursion),
+            write a function
+            \[
+                \mathsf{every} : (X \to \mathsf{Bool}) \to \mathsf{List}\,X \to \mathsf{Bool}
+            \]
+            such that $\mathsf{every}\;p\;\mathit{xs}$ returns $\mathsf{true}$ if every
+            element of $\mathit{xs}$ satisfies $p$, and $\mathsf{false}$ otherwise. This
+            function should also stop iterating over the list as soon as it finds a false
+            element. You may use SML- or OCaml-style notation if desired, but explain any
+            notation used beyond the basic lambda calculus. \qmarks{4 marks}
+
+            \answer{ 
+                let every p xs = fold xs ([] $\to$ True) (x::r $\to$ if p x then r else throw False)
+            }
+
+        \item
+            In the monadic lambda calculus with state, suppose we change the typing rule
+            for reading locations to not cause a monadic effect: If we suggest changing
+            the monadic lambda calculus to permit treating reads as pure:
+            \[
+                \frac{l : X \in \Sigma}{\Sigma; \Gamma \vdash {!}l : X}
+            \]
+            \begin{enumerate}
+                \item
+                    Is this rule still typesafe? Informally but carefully justify your
+                    answer. \qmarks{2 marks}
+
+                    \answer{ 
+                        This question is asking given this rule, would the inductively defined set still have the type safety property. Specifically, would it still have progress and type preservation? Yes, I think the monoids and the split between pure and inpure code only deals with termination, not with type safety. 
+                    }
+
+                \item
+                    Is the following \emph{common subexpression elimination}
+                    transformation sound? Either give an argument why it is, or supply a
+                    counterexample and explain why it shows it is not. \qmarks{6 marks}
+
+                    \begin{center}
+                        \begin{tabular}{l c l}
+                            \texttt{let x = return e1;} &                 & \texttt{let x = return e1;} \\
+                            \texttt{let y = e2;}        & \texttt{=====>} & \texttt{let y = e2;}        \\
+                            \texttt{let z = return e1;} &                 & \texttt{[z/x]e3}            \\
+                            \texttt{e3}                 &                 &
+                        \end{tabular}
+                    \end{center}
+
+                    \answer{
+                        No. This code is run sequentially, meaning the effects of \texttt{y} would have effects on the result of \texttt{z}, and hence \texttt{x} and \texttt{z} could return different values, and when used in \texttt{e3}, would result in different results. Consider
+                        \begin{center}
+                            \begin{tabular}{l}
+                                \texttt{let x = return !l;} \\
+                                \texttt{let y = l := 0;}    \\
+                                \texttt{let z = return !l;} \\
+                                \texttt{e3}
+                            \end{tabular}
+                        \end{center}
+                        This would not return the same result if location \texttt{l} initially stored a value other than \texttt{0}.
+                    }
+
+            \end{enumerate}
+
+        \item
+            In System F augmented with existential types, give an existential type for
+            the interface of the natural numbers, and give an implementation for it.
+            \qmarks{8 marks}
+
+            \answer{ 
+                For the natural numbers, we need some implementation of the zero, successor and iteration. To do this, we might provide an interface like: 
+
+                \[ 
+                    \exists \alpha. \alpha \times (\alpha \to \alpha) \times (\forall \beta. \alpha \to \beta \to (\beta \to \beta) \to \beta)
+                \]
+
+                We might expect an implementation like the church numerals, where we let: 
+
+                $\mathsf{type} \triangleq \forall x. x \to (x \to x) \to x$ 
+
+                $\mathsf{zero} \triangleq \Lambda \alpha. \lambda z: \alpha. \lambda s: (\alpha \to \alpha). z$
+
+                $\mathsf{succ} \triangleq \lambda x: \mathsf{Nat}. \Lambda \alpha. \lambda z: \alpha. \lambda s: (\alpha \to \alpha). s (x \mathsf{Nat} z s)$
+
+                $\mathsf{iter} \triangleq \Lambda \alpha. \lambda x: \mathsf{Nat}. \lambda z: \alpha. \lambda s: \alpha \to \alpha. x \alpha z s$
+            }
+
+    \end{enumerate}
+
+\end{examquestion}
+
+\begin{examquestion}{2019}{9}{14}
+    \begin{enumerate}
+        \item
+            In System F, give a Church encoding for (i) the Boolean type, (ii) the
+            definition of the $\mathsf{True}$ and $\mathsf{False}$ constants, and (iii)
+            the type and definition of the if-then-else operation. \qmarks{3 marks}
+
+            \answer{ 
+                \begin{enumerate} 
+                    \item 
+                    $\forall \alpha. \alpha \to \alpha \to \alpha$
+
+                    \item
+                    True: $\Lambda \alpha. \lambda x: \alpha . \lambda y: \alpha. x$
+
+                    False: $\Lambda \alpha. \lambda x: \alpha . \lambda y: \alpha. y$
+
+                    \item
+                    if $e_1$ then $e_2$ else $e_3$. This will be of type: $\forall \alpha: B \to \alpha \to \alpha \to \alpha$. We can further define this as: 
+
+                    \[ 
+                        \Lambda \alpha. \lambda b: B. \lambda t: \alpha . \lambda f: \alpha. b \  \alpha \  t \  f 
+                    \]
+
+                \end{enumerate}
+            }
+
+        \item
+            In System F, give (i) a Church encoding $\mathsf{Nat}$ for the natural
+            numbers, (ii) a Church encoding for the $\mathsf{Zero} : \mathsf{Nat}$ and
+            $\mathsf{Succ} : \mathsf{Nat} \to \mathsf{Nat}$ constructors, and (iii) a type
+            and definition for the iteration operator $\mathsf{Iter}$ for natural
+            numbers. \qmarks{3 marks}
+
+            \answer{ 
+                \begin{enumerate} 
+                    \item 
+                    $\forall \alpha. \alpha \to (\alpha \to \alpha) \to \alpha$
+
+                    \item
+                    Zero: $\Lambda \alpha. \lambda z:\alpha . \lambda s:\alpha \to \alpha. z$
+
+                    Succ: $\lambda x: Nat. \Lambda \alpha. \lambda z:\alpha . \lambda s:\alpha \to \alpha. s (x \alpha z s)$
+
+                    \item
+                    Iter($e_1$, Zero $\to e_2$, Succ $(x) \to e_3$). The type of iter is hence $\forall \alpha. Nat \to \alpha \to (\alpha \to \alpha) \to \alpha$. A definition for this operator is thus: 
+
+                    \[ 
+                        \Lambda \alpha. \lambda x: Nat. z: \alpha. s: \alpha \to \alpha. x \ \alpha \ z \ s
+                    \]
+
+                \end{enumerate}
+            }
+
+        \item
+            \begin{enumerate}
+                \item
+                    In System F, give a Church encoding for (i) an $\mathsf{Option}_A$
+                    type, (ii) the definitions of the
+                    $\mathsf{None} : \mathsf{Option}_A$ and
+                    $\mathsf{Some} : A \to \mathsf{Option}_A$ operations, and (iii) the
+                    type and definition of the case operation on options.
+                    `'
+                    \answer{ 
+                        \begin{enumerate} 
+                            \item 
+                            $\forall \alpha. \alpha \to (A \to \alpha) \to \alpha$
+     
+                            \item
+                            None: $\Lambda \alpha. \lambda n: \alpha. \lambda s: (A \to \alpha). n$
+
+                            Some: $\lambda x: A. \Lambda \alpha. \lambda n: \alpha. \lambda s: (A \to \alpha). s x$
+     
+                            \item
+                            Case($e_1$, None $\to e_2$, Some$(x) \to e_3$). The type of the case operation can be given as: $\forall \alpha. \text{Option}_A \to \alpha \to (A \to \alpha) \to \alpha$. The definition of the case operation can be given as: 
+                            
+                            \[ 
+                                \Lambda \alpha. \o: \text{Option}_A. \lambda n: \alpha. \lambda s: (A \to \alpha). o \ \alpha \ n \ s
+                            \]
+     
+                        \end{enumerate}
+                    }
+
+                \item
+                    Assume that $n : B$ and $s : A \to B$, and then
+                    \begin{enumerate}[label=(\Alph*)]
+                        \item
+                            Prove that $\mathsf{Case}\,[B]\;n\;s\;\mathsf{None} = n$
+
+                            \answer{
+                                \begin{align*}
+                                    & \mathsf{Case}\,[B]\;\mathsf{None}\;n\;s \\
+                                    &= (\Lambda\alpha.\, \lambda o{:}\mathsf{Option}_A.\, \lambda n{:}\alpha.\, \lambda s{:}(A \to \alpha).\; o\;\alpha\;n\;s)\,[B]\;\mathsf{None}\;n\;s \\
+                                    &= \mathsf{None}\,[B]\;n\;s \\
+                                    &= n
+                                \end{align*}
+                            }
+
+                        \item
+                            Prove that
+                            $\mathsf{Case}\,[B]\;n\;s\;(\mathsf{Some}\;x) = s\;x$
+                            \qmarks{5 marks}
+
+                            \answer{
+                                \begin{align*}
+                                    & \mathsf{Case}\,[B]\;(\mathsf{Some}\;x)\;n\;s \\
+                                    &= (\Lambda\alpha.\, \lambda o{:}\mathsf{Option}_A.\, \lambda n{:}\alpha.\, \lambda s{:}(A \to \alpha).\; o\;\alpha\;n\;s)\,[B]\;(\mathsf{Some}\;x)\;n\;s \\
+                                    &= (\mathsf{Some}\;x)\,[B]\;n\;s \\
+                                    &= (\Lambda\alpha.\, \lambda n{:}\alpha.\, \lambda s{:}(A \to \alpha).\; s\;x)\,[B]\;n\;s \\
+                                    &= s\;x
+                                \end{align*}
+                            }
+
+
+                    \end{enumerate}
+
+            \end{enumerate}
+
+        \item
+            In System F, define a predecessor operation
+            $\mathsf{Pred} : \mathsf{Nat} \to \mathsf{Nat}$, which returns
+            $\mathsf{Zero}$ if given $\mathsf{Zero}$ as an argument, and return $n$ if
+            given $\mathsf{Succ}\;n$ as an argument. [\textit{Hint}: The option type may
+            be useful in formulating this definition.] \qmarks{8 marks}
+
+            \answer{
+                We can define $\mathsf{Pred}$ with the following helper function. We first define
+                \begin{align*}
+                    \mathsf{Helper} = \lambda x{:}\mathsf{Nat}.\; \mathsf{Iter}\,[\mathsf{Option}_{\mathsf{Nat}}]\;x\;\mathsf{None}\;
+                    (&\lambda y{:}\mathsf{Option}_{\mathsf{Nat}}.\; \mathsf{Case}\,[\mathsf{Option}_{\mathsf{Nat}}]\;y \\
+                     &\quad (\mathsf{Some}\;\mathsf{Zero})\;(\lambda n{:}\mathsf{Nat}.\; \mathsf{Some}\;(\mathsf{Succ}\;n)))
+                \end{align*}
+                We can then define $\mathsf{Pred}$:
+                \[
+                    \mathsf{Pred} = \lambda x{:}\mathsf{Nat}.\; \mathsf{Case}\,[\mathsf{Nat}]\;(\mathsf{Helper}\;x)\;\mathsf{Zero}\;(\lambda y{:}\mathsf{Nat}.\; y)
+                \]
+            }
+
+        \item
+            In System F, define a subtraction operator
+            $\mathsf{Sub} : \mathsf{Nat} \to \mathsf{Nat} \to \mathsf{Nat}$, which is
+            defined to be \emph{saturating}. That is, $\mathsf{Sub}\;m\;n$ returns the
+            difference if $m \geq n$, and returns 0 otherwise. \qmarks{1 mark}
+
+            \answer{
+                We can define the subtraction operator as such:
+                \[
+                    \mathsf{Sub} = \lambda x{:}\mathsf{Nat}.\; \lambda y{:}\mathsf{Nat}.\; y\,[\mathsf{Nat}]\;x\;\mathsf{Pred}
+                \]
+            }
+
+    \end{enumerate}
+
+\end{examquestion}
+
+\begin{examquestion}{2018}{8}{14}
+    \begin{enumerate}
+        \item
+            Give typing rules for the introduction form $\mathsf{pack}(\tau, M)$ and
+            elimination form $\mathsf{unpack}\ M\ \mathsf{as}\ (x, \alpha)\ \mathsf{in}\ N$
+            of the existential type $\exists\alpha(\tau)$. \qmarks{4 marks}
+
+        \answer{
+            $\frac{\Theta \vdash \tau' \ \text{type} \quad \Theta, \alpha \vdash \tau \ \text{type} \quad \Theta; \Gamma \vdash M : [\tau' / \alpha](\tau) }{\Theta; \Gamma \vdash \text{pack}(\tau', M) : \exists \alpha(\tau)}$ $\exists I$
+
+            $\frac{\Theta; \Gamma \vdash M : \exists \alpha(\tau) \quad \Theta , \alpha ; \Gamma, x : \tau \vdash N : C \quad \Theta \vdash c \ \text{type}}{\Theta ; \Gamma \vdash \ \text{unpack} \ M \text{as} \ (x, \alpha) \ \text{in} \ N : C}$ $\exists E$
+        }
+
+        \item
+            An infinite stream of booleans can be represented in the polymorphic lambda
+            calculus using the existential type
+            \[
+                \mathsf{stream} \triangleq \exists\alpha(\alpha \times (\alpha \to (\mathsf{bool} \times \alpha)))
+            \]
+            \begin{enumerate}
+                \item
+                    Using the encoding above, define a function
+                    $\mathsf{head} : \mathsf{stream} \to \mathsf{bool}$. \qmarks{3 marks}
+
+                    \answer{ 
+                        head can be defined as 
+
+                        \[ 
+                            \lambda s: \ \text{stream}.\ \text{unpack} s \ \text{as} \ (x, \alpha) \ \text{in} \ fst(snd(x) (fst(x)))
+                        \]
+                    }
+
+                \item
+                    Using the encoding above, define a function
+                    $\mathsf{tail} : \mathsf{stream} \to \mathsf{stream}$. \qmarks{3 marks}
+
+                    \answer{ 
+                        tail can be defined as 
+
+                        \[ 
+                            \lambda s: \ \text{stream}.\ \text{unpack} s \ \text{as} \ (x, \alpha) \ \text{in} \ \text{pack}(\alpha, (snd(snd(x) fst(x)), snd(x)))
+                        \]
+                    }
+
+                \item
+                    Using the encoding above, define a function
+                    \[
+                        \mathsf{unfold} : \forall\alpha(\alpha \to (\alpha \to (\mathsf{bool} \times \alpha)) \to \mathsf{stream})
+                    \]
+                    \qmarks{4 marks}
+
+                    \answer{ 
+                        unfold can be defined as: 
+
+                        \[
+                            \Lambda \alpha . \lambda l: \alpha . \lambda n : \alpha \to (\text{bool} \times \alpha) . \text{pack}(\alpha, (l, n))
+                        \]
+                    }
+
+                \item
+                    Using $\mathsf{unfold}$ and the other functions above, define a
+                    function $\mathsf{notstream} : \mathsf{stream} \to \mathsf{stream}$,
+                    which returns a stream containing the boolean negation of the elements
+                    of the input stream. This answer should not use explicit
+                    $\mathsf{pack}$ or $\mathsf{unpack}$ expressions. \qmarks{6 marks}
+
+                    \answer{ 
+                        notstream can be defined as: 
+
+                        \[ 
+                            \lambda s : \text{stream} . \text{unfold} \ \text{stream} \ s (\lambda y: (\text{not}(\text{head} \ y), \text{tail} \ y))
+                        \]
+                    }
+
+            \end{enumerate}
+
+    \end{enumerate}
+
+    [\textit{Note}: You may use extensions to the pure polymorphic lambda calculus such
+    as let-bindings, natural numbers, products, and sum types, but carefully note their
+    use and their typing in your answers.]
+
+\end{examquestion}
+
+
+\end{document}
