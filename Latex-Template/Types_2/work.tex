@@ -1,0 +1,700 @@
+% Include the per-supervision info file.
+\input{./infofile.tex}
+
+\documentclass[10pt,\jkfside,a4paper]{article}
+
+% Pull in the template, configured as above.
+\input{../template/template.tex}
+
+% If you have any additional \usepackage commands, or other
+% macros or directives, put them here.  Remember not to edit
+% files in the template directory because any changes will
+% be overwritten when template updates are issued.
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{minted}
+\usepackage[breakable]{tcolorbox}
+\usepackage{upgreek}
+\usepackage{stmaryrd}
+\usepackage{bussproofs}
+
+\newcommand{\answer}[1]{
+    \begin{tcolorbox}[colframe=black, colback=white, sharp corners, boxrule=0.2mm, breakable]
+        #1
+    \end{tcolorbox}
+}
+
+
+% Right-aligned mark allocation, e.g. \qmarks{4 marks}
+\newcommand{\qmarks}[1]{\hspace*{\fill}[#1]}
+
+\begin{document}
+
+% Your work here.
+% See example_sv/example.tex for LaTeX examples.
+
+% Lecture 9 exercises
+\begin{enumerate}
+    \item
+    Show $\neg A \vee B, A; \cdot \vdash B\ \mathsf{true}$ is derivable.
+
+    \answer{
+        \begin{small}
+            \begin{prooftree}
+                \AxiomC{$\neg A \vee B, A; B \vdash \neg A \vee B\ \mathsf{true}$}
+                \AxiomC{$\neg A \vee B, A; B \vdash A\ \mathsf{true}$}
+                \UnaryInfC{$\neg A \vee B, A; B \vdash \neg A\ \mathsf{false}$}
+                \AxiomC{$\neg A \vee B, A; B \vdash B\ \mathsf{false}$}
+                \BinaryInfC{$\neg A \vee B, A; B \vdash \neg A \vee B\ \mathsf{false}$}
+                \BinaryInfC{$\neg A \vee B, A; B \vdash \mathsf{contr}$}
+                \UnaryInfC{$\neg A \vee B, A; \cdot \vdash B\ \mathsf{true}$}
+            \end{prooftree}
+        \end{small}
+    }
+
+    \item
+    Show that $\neg(\neg A \wedge \neg B); \cdot \vdash A \vee B\ \mathsf{true}$ is derivable.
+
+    \answer{
+        % Tree is wider than the box at normal size, so scale it to fit.
+        \begin{center}
+            \resizebox{\linewidth}{!}{%
+                \AxiomC{$\neg(\neg A \wedge \neg B); A \vee B \vdash \neg(\neg A \wedge \neg B)\ \mathsf{true}$}%
+                \AxiomC{$\neg(\neg A \wedge \neg B), A; A \vee B \vdash A\ \mathsf{true}$}%
+                \UnaryInfC{$\neg(\neg A \wedge \neg B), A; A \vee B \vdash A \vee B\ \mathsf{true}$}%
+                \UnaryInfC{$\neg(\neg A \wedge \neg B), A; A \vee B \vdash \mathsf{contr}$}%
+                \UnaryInfC{$\neg(\neg A \wedge \neg B); A \vee B \vdash A\ \mathsf{false}$}%
+                \UnaryInfC{$\neg(\neg A \wedge \neg B); A \vee B \vdash \neg A\ \mathsf{true}$}%
+                \AxiomC{$\neg(\neg A \wedge \neg B), A; A \vee B \vdash B\ \mathsf{true}$}%
+                \UnaryInfC{$\neg(\neg A \wedge \neg B), B; A \vee B \vdash A \vee B\ \mathsf{true}$}%
+                \UnaryInfC{$\neg(\neg A \wedge \neg B), B; A \vee B \vdash \mathsf{contr}$}%
+                \UnaryInfC{$\neg(\neg A \wedge \neg B); A \vee B \vdash B\ \mathsf{false}$}%
+                \UnaryInfC{$\neg(\neg A \wedge \neg B); A \vee B \vdash \neg B\ \mathsf{true}$}%
+                \BinaryInfC{$\neg(\neg A \wedge \neg B); A \vee B \vdash \neg A \wedge \neg B\ \mathsf{true}$}%
+                \UnaryInfC{$\neg(\neg A \wedge \neg B); A \vee B \vdash \neg(\neg A \wedge \neg B)\ \mathsf{false}$}%
+                \BinaryInfC{$\neg(\neg A \wedge \neg B); A \vee B \vdash \mathsf{contr}$}%
+                \UnaryInfC{$\neg(\neg A \wedge \neg B); \cdot \vdash A \vee B\ \mathsf{true}$}%
+                \DisplayProof%
+            }
+        \end{center}
+    }
+
+    \item
+    Give the embedding for classical into intuitionistic logic for the Godel-Gentzen translation 
+
+    \answer{
+        \[
+            (X \to Y)^\circ = (\neg X \vee Y)^\circ = {\sim}({\sim}(\neg X)^\circ \times {\sim}Y^\circ) = {\sim}({\sim}{\sim}X^\circ \times {\sim}Y^\circ)
+        \]
+        \begin{align*}
+            x^\circ &= x \\
+            \langle\rangle^\circ &= \langle\rangle \\
+            \langle e_1, e_2 \rangle^\circ &= \langle e_1^\circ, e_2^\circ \rangle \\
+            (\mathsf{fst}\; e)^\circ &= \mathsf{fst}\; e^\circ \\
+            (\mathsf{snd}\; e)^\circ &= \mathsf{snd}\; e^\circ \\
+            (\mathsf{L}\; e)^\circ &= \lambda k : {\sim}A^\circ \times {\sim}B^\circ.\, (\mathsf{fst}\; k)\; e^\circ \\
+            (\mathsf{R}\; e)^\circ &= \lambda k : {\sim}A^\circ \times {\sim}B^\circ.\, (\mathsf{snd}\; k)\; e^\circ \\
+            (\mathsf{case}(e, \mathsf{L}\,x \to e_1, \mathsf{R}\,y \to e_2))^\circ &= e^\circ\; \langle \lambda x : A^\circ.\, e_1^\circ, \lambda y : B^\circ.\, e_2^\circ \rangle \\
+            (\lambda x : X.\, e)^\circ &= \lambda x : X^\circ.\, e^\circ \\
+            (e_1 e_2)^\circ &= e_1^\circ e_2^\circ \\
+        \end{align*}
+        unsure about letcont and throw
+    }
+
+    \item 
+    Using the intuitionistic calculus extended with continuations, give a typed term proving Pierce's law. 
+
+    \answer{
+        \[ 
+            \lambda f : (X \to Y) \to X. \mathsf{let cont} u : \neg X . f (\lambda x : A. \mathsf{throw}(u, x))
+        \]  
+    }
+\end{enumerate}
+
+\begin{examquestion}{2021}{8}{15}
+    \begin{enumerate}
+        \item
+            In the calculus of proofs and refutations, suppose that
+            $\Gamma; \Delta \vdash A\ \mathsf{true}$ and
+            $\Gamma, A; \Delta \vdash C\ \mathsf{true}$. Show that
+            $\Gamma; \Delta \vdash C\ \mathsf{true}$ is derivable. [\textit{Hint}:
+            Recall that weakening is admissible in this calculus.] \qmarks{8 marks}
+
+            \answer{
+                Suppose $\Gamma; \Delta \vdash A\ \mathsf{true}$ and $\Gamma, A; \Delta \vdash C\ \mathsf{true}$.
+
+                \textbf{RTP:} $\Gamma; \Delta \vdash C\ \mathsf{true}$. Effectively, $A \wedge (A \to C) \Rightarrow C$.
+
+                \begin{prooftree}
+                    \AxiomC{$\Gamma; \Delta, C \vdash A\ \mathsf{true}$}
+                    \AxiomC{$\Gamma, A; \Delta, C \vdash C\ \mathsf{true}$}
+                    \AxiomC{$\Gamma, A; \Delta, C \vdash C\ \mathsf{false}$}
+                    \BinaryInfC{$\Gamma, A; \Delta, C \vdash \mathsf{contr}$}
+                    \UnaryInfC{$\Gamma; \Delta, C \vdash A\ \mathsf{false}$}
+                    \BinaryInfC{$\Gamma; \Delta, C \vdash \mathsf{contr}$}
+                    \UnaryInfC{$\Gamma; \Delta \vdash C\ \mathsf{true}$}
+                \end{prooftree}
+                
+                This derivation tree assumes weakening holds, thus $\Gamma; \Delta, C \vdash A\ \mathsf{true}$ and $\Gamma, A; \Delta, C \vdash C\ \mathsf{true}$ hold.
+            }
+
+        \item
+            In System F, consider an arbitrary type $A$.
+
+            \begin{enumerate}
+                \item
+                    Give two terms $f : A \to \forall a.\, (A \to a) \to a$ and
+                    $g : (\forall a.\, (A \to a) \to a) \to A$. \qmarks{3 marks}
+
+                    \answer{
+                        $f : A \to \forall a.\, (A \to a) \to a$
+                        \[
+                            \lambda x : A.\, \Lambda \alpha.\, \lambda f : (A \to \alpha).\, f\;x
+                        \]
+
+                        $g : (\forall a.\, (A \to a) \to a) \to A$
+                        \[
+                            \lambda g :(\forall a.\, (A \to a) \to a).\, g\;A\;(\lambda x : A.\, x)
+                        \]
+                    }
+
+                \item
+                    Carefully explain what this tells you about the relationship between
+                    the types $A$ and $\forall a.\, (A \to a) \to a$. \qmarks{4 marks}
+
+                    \answer{
+                        $g \circ f$  would be the identity relation, and maybe in this case we can think about f as an introduction rule and g as its elimination rule.
+                    }
+
+            \end{enumerate}
+
+        \item
+            Consider the following piece of Agda code, where \texttt{Nat} is the type of
+            natural numbers:
+
+\begin{lstlisting}[basicstyle=\ttfamily, literate={->}{{$\to$}}2]
+X : (P : Nat -> Set) ->
+    P 0 ->
+    ((n : Nat) -> P n -> P (1 + n)) ->
+    (k : Nat) -> P k
+X P base step zero = base
+X P base step (suc n) = step n (X P base step n)
+\end{lstlisting}
+
+            \begin{enumerate}
+                \item
+                    Explain what the \texttt{X} function means in logical terms.
+                    \qmarks{2 marks}
+
+                    \answer{ 
+                        unsure what this is getting at 
+                    }
+
+
+                \item
+                    Explain what the \texttt{X} function does in terms of functional
+                    programming. \qmarks{3 marks}
+
+                    \answer{ 
+                        X is an iteration function - it considers a base value and a step function, and applies step $n$ times to the base value based off the $n$ supplied
+                    }
+
+            \end{enumerate}
+
+    \end{enumerate}
+
+\end{examquestion}
+
+\begin{examquestion}{2020}{8}{15}
+    \begin{enumerate}
+        \item
+            Recall that in constructive logic, logical negation is defined using
+            implication and falsehood as $\neg A \triangleq A \supset \bot$.
+
+            \begin{enumerate}
+                \item
+                    Does $A \supset \neg\neg A$? If so, give a simply-typed lambda-term
+                    corresponding to this implication.
+
+                    \answer{
+                        Yes. $A \supset \neg\neg A$ is the same as $A \supset ((A \supset \bot) \supset \bot)$.
+
+                        The term would be:
+                        \[
+                            \lambda x : A.\, \lambda k : \neg A.\, k\;x
+                        \]
+                    }
+
+                \item
+                    Does $\neg\neg A \supset A$? If so, give a simply-typed lambda-term
+                    corresponding to this implication.
+
+                    \answer{
+                        No.
+                    }
+
+                \item
+                    Does $\neg\neg\neg A \supset \neg A$? If so, give a simply-typed
+                    lambda-term corresponding to this implication.
+
+                    \answer{
+                        Yes, $\neg\neg\neg A \supset \neg A$.
+                        \[
+                            \lambda q : \neg\neg\neg A.\, \lambda x : A.\, q\;(\lambda k : \neg A.\, k\;x)
+                        \]
+                    }
+
+            \end{enumerate}
+
+            \qmarks{5 marks}
+
+        \item
+            \begin{enumerate}
+                \item
+                    Give the typing rules for Peano natural numbers and their eliminator.
+                    \qmarks{2 marks}
+
+                    \answer{
+                        \[
+                            \frac{}{\Gamma \vdash z : \mathbb{N}}
+                            \qquad
+                            \frac{\Gamma \vdash n : \mathbb{N}}{\Gamma \vdash s(n) : \mathbb{N}}
+                        \]
+
+                        \[ \frac{\Gamma \vdash e_1 : \mathbb{N} \quad \Gamma \vdash e_2 : C \quad \Gamma, x : C \vdash e_3 : C}{\Gamma \vdash \mathsf{iter}(e_1, z \rightarrow e_2, s(x) \rightarrow e_3): C}\]
+                    }
+
+                \item
+                    Using the rules given above, define the addition function.
+                    \qmarks{3 marks}
+
+                    \answer{
+                        \[
+                            \mathsf{add}\;m\;n = \lambda m : \mathbb{N}.\, \lambda n : \mathbb{N}.\, \mathsf{iter}(m,\ z \to n,\ s(x) \to s(x))
+                        \]
+                    }
+
+                \item
+                    Let a binary tree be either a leaf \texttt{Leaf} or a node
+                    \texttt{Node(l,x,r)} where \texttt{l} and \texttt{r} are subtrees,
+                    and \texttt{x} is a natural number. Give typing rules for trees
+                    corresponding to this prose description, including an eliminator.
+                    \qmarks{3 marks}
+
+                    \answer{
+                        \[
+                            \frac{}{\Gamma \vdash \mathsf{Leaf} : \mathsf{BTree}}
+                            \qquad
+                            \frac{\Gamma \vdash l : \mathsf{BTree} \quad \Gamma \vdash r : \mathsf{BTree} \quad \Gamma \vdash x : \mathbb{N}}{\Gamma \vdash \mathsf{Node}(l, x, r) : \mathsf{BTree}}
+                        \]
+                        \[
+                            \frac{\Gamma \vdash e_1 : \mathsf{BTree} \quad \Gamma \vdash e_2 : C \quad \Gamma, l : C, r : C, x : \mathbb{N} \vdash e_3 : C}{\Gamma \vdash \mathsf{iter}(e_1,\ \mathsf{Leaf} \to e_2,\ \mathsf{Node}(l, x, r) \to e_3) : C}
+                        \]
+                    }
+
+                \item
+                    Using the rules given above, define a function \texttt{size} which
+                    takes a binary tree and returns the total number of nodes in the
+                    tree. \qmarks{5 marks}
+
+                    \answer{
+                        \[
+                            \mathsf{size} = \lambda x : \mathsf{BTree}.\, \mathsf{iter}(x,\ \mathsf{Leaf} \to z,\ \mathsf{Node}(l, x, r) \to s(\mathsf{add}\;l\;r))
+                        \]
+                    }
+
+            \end{enumerate}
+
+        \item
+            The \texttt{zip} function takes two lists, and returns a list of pairs of the
+            elements as output. Suppose we see the following Agda type declaration for
+            \texttt{zip}:
+            \[
+                \mathit{zip} : \forall \{A\ B : \mathit{Set}\} \to \{n : \mathit{Nat}\} \to \mathsf{Vec}\,A\,n \to \mathsf{Vec}\,B\,n \to \mathsf{Vec}\,(A \times B)\,n
+            \]
+            Explain what this means in terms of how to call the function, and what
+            properties the result has. \qmarks{2 marks}
+
+            \answer{ 
+                When we call the zip function, we need to minimally supply 2 lists of types A and B, each of length n. We can optionally supply this value n, which must match the length of the list supplied, else this will not typecheck. We can also optionally supply the types of the elements of both list. The output will be guarenteed to have a length n, and its elements will be of a type pair of A and B. 
+            }
+
+    \end{enumerate}
+
+\end{examquestion}
+
+\begin{examquestion}{2019}{8}{13}
+    Recall the three judgements for classical propositional logic:
+
+    \begin{enumerate}
+        \item
+            $\Gamma; \Delta \vdash e : A\ \mathsf{true}$ -- $e$ is a proof of type $A$
+
+        \item
+            $\Gamma; \Delta \vdash k : A\ \mathsf{false}$ -- $k$ is a refutation of type
+            $A$
+
+        \item
+            $\Gamma; \Delta \vdash \langle e \mid_A k \rangle\ \mathsf{contr}$ --
+            $\langle e \mid_A k \rangle$ is a contradiction at type $A$
+
+    \end{enumerate}
+
+    Here, $\Gamma$ contains the true assumptions, and $\Delta$ are the false
+    assumptions. In this question, we will extend classical propositional logic with
+    support for the implication or function type operator $A \to B$.
+
+    \begin{enumerate}
+        \item
+            Give a proof term and inference rule for a proof of type $A \to B$.
+            \qmarks{4 marks}
+
+            \answer{
+                \[
+                    \frac{\Gamma, x : A; \Delta \vdash e : B\ \mathsf{true}}{\Gamma; \Delta \vdash \lambda x : A.\, e : A \to B\ \mathsf{true}}
+                \]
+            }
+
+        \item
+            Give a proof term and inference rule for a refutation of type $A \to B$.
+
+            [\textit{Hint}: how is implication encoded in classical logic?]
+            \qmarks{4 marks}
+
+            \answer{
+                We note that $A \to B$ is encoded as $\neg A \vee B$ in classical logic. Writing this out, we get: 
+
+                \begin{prooftree}
+                    \AxiomC{$\Gamma; \Delta \vdash A\ \mathsf{true}$}
+                    \UnaryInfC{$\Gamma; \Delta \vdash \neg A\ \mathsf{false}$}
+                    \AxiomC{$\Gamma; \Delta \vdash k: B\ \mathsf{true}$}
+                    \BinaryInfC{$\Gamma; \Delta \vdash [\neg e, k]: \neg A \vee B\ \mathsf{false}$}
+                \end{prooftree}
+
+                Hence the rule is:
+
+                \[
+                    \frac{\Gamma; \Delta \vdash e : A\ \mathsf{true} \quad \Gamma; \Delta \vdash k : B\ \mathsf{false}}{\Gamma; \Delta \vdash [\neg e, k] : A \to B\ \mathsf{false}}
+                \]
+
+                I suppose if we follow the notation that $[. , .]$ is a sum of continuations, we might intepret $\neg e$ here as a value that has somehow been pushed onto the continuation stack, and hence could be sued later down the road. 
+            }
+
+        \item
+            Give a reduction rule for contradiction configurations of the form
+            $\langle e \mid_{A \to B} k \rangle$. \qmarks{4 marks}
+
+            \answer{
+                $\langle e \mid_{A \to B} k \rangle$ must be of the form $\langle \lambda x : A.\, e' \mid_{A \to B} [e, k] \rangle$ after reduction, so
+                \[
+                    \langle \lambda x : A.\, e' \mid_{A \to B} [e, k] \rangle \rightsquigarrow \langle [e/x]e' \mid_B k \rangle
+                \]
+            }
+
+        \item
+            \begin{enumerate}
+                \item
+                    State the preservation theorem for classical logic. \qmarks{2 marks}
+
+                    \answer{
+                        If $c = \langle e \mid_A k \rangle$, $\cdot; \cdot \vdash c\ \mathsf{contr} \wedge c \rightsquigarrow c'$ then $\cdot; \cdot \vdash c'\ \mathsf{contr}$.
+                    }
+
+                \item
+                    Give the proof of preservation for the case of the new rule defined
+                    above. You may assume that weakening, exchange and substitution all
+                    hold. \qmarks{6 marks}
+
+                    \answer{
+                        Assume that $\cdot; \cdot \vdash \langle \lambda x : A.\, e' \mid_{A \to B} [e, k] \rangle\ \mathsf{contr}$ \\
+                        and $\langle \lambda x : A.\, e' \mid_{A \to B} [e, k] \rangle \rightsquigarrow \langle [e/x]e' \mid_B k \rangle$.
+
+                        \textbf{RTP:} $\cdot; \cdot \vdash \langle [e/x]e' \mid_B k \rangle\ \mathsf{contr}$.
+
+                        Assume weakening (of contexts), exchange (of contexts) and substitution (of terms of appropriate types) are true.
+
+                        By inversion, $\cdot; \cdot \vdash \lambda x : A.\, e' : A \to B\ \mathsf{true}$ \hfill (1) \\
+                        and $\cdot; \cdot \vdash [e, k] : A \to B\ \mathsf{false}$. \hfill (2)
+
+                        By inversion of (1), $x : A; \cdot \vdash e' : B\ \mathsf{true}$. \hfill (3)
+
+                        By inversion of (2), $\cdot; \cdot \vdash e : A\ \mathsf{true}$ \hfill (4) \\
+                        and $\cdot; \cdot \vdash k : B\ \mathsf{false}$. \hfill (5)
+
+                        By substitution, (3) and (4), $\cdot; \cdot \vdash [e/x]e' : B\ \mathsf{true}$. \hfill (6)
+
+                        So by (5) and (6), $\cdot; \cdot \vdash \langle [e/x]e' \mid_B k \rangle\ \mathsf{contr}$.
+                    }
+
+            \end{enumerate}
+
+    \end{enumerate}
+
+\end{examquestion}
+
+\begin{examquestion}{2014}{9}{13}
+    \begin{enumerate}
+        \item
+            Give an account of the Polymorphic Lambda Calculus (PLC). You should define
+            the PLC types, expressions and typing environments, give the PLC typing
+            rules, and define the relations of \emph{beta-reduction} and
+            \emph{beta-conversion}. Explain why beta-conversion is a decidable relation
+            for expressions that are typeable. \qmarks{10 marks}
+
+            \answer{
+                Polymorphic lambda calculus:
+                \begin{align*}
+                    \text{Types } A, B &::= \alpha \mid A \to B \mid \forall \alpha.\, A \\
+                    \text{Terms } e &::= x \mid \lambda x : A.\, e \mid e\;e \mid \Lambda \alpha.\, e \mid e\;A \\
+                    \text{Term contexts } \Gamma &::= \cdot \mid \Gamma, x : A \\
+                    \text{Type contexts } \Theta &::= \cdot \mid \Theta, \alpha \\
+                    \text{Values } v &::= x\ | \lambda x: A. e\ | \Lambda \alpha. e
+                \end{align*}
+
+                \[
+                    \frac{\alpha \in \Theta}{\Theta \vdash \alpha\ \mathsf{type}}
+                    \qquad
+                    \frac{\Theta \vdash A\ \mathsf{type} \quad \Theta \vdash B\ \mathsf{type}}{\Theta \vdash A \to B\ \mathsf{type}}
+                    \qquad
+                    \frac{\Theta, \alpha \vdash A\ \mathsf{type}}{\Theta \vdash \forall \alpha.\, A\ \mathsf{type}}
+                \]
+
+                \[
+                    \frac{}{\Theta \vdash \cdot\ \mathsf{ctx}}
+                    \qquad
+                    \frac{\Theta \vdash \Gamma\ \mathsf{ctx} \quad \Theta \vdash A\ \mathsf{type}}{\Theta \vdash \Gamma, x : A\ \mathsf{ctx}}
+                \]
+
+                \[
+                    \frac{x : A \in \Gamma}{\Theta; \Gamma \vdash x : A}
+                    \qquad
+                    \frac{\Theta; \Gamma, x : A \vdash e : B}{\Theta; \Gamma \vdash \lambda x : A.\, e : A \to B}
+                \]
+
+                \[
+                    \frac{\Theta; \Gamma \vdash e_1 : A \to B \quad \Theta; \Gamma \vdash e_2 : A}{\Theta; \Gamma \vdash e_1\;e_2 : B}
+                    \qquad
+                    \frac{\Theta, \alpha; \Gamma \vdash e : A}{\Theta; \Gamma \vdash \Lambda \alpha.\, e : \forall \alpha.\, A}
+                \]
+
+                \[
+                    \frac{\Theta, \alpha; \Gamma \vdash e : B \quad \Theta \vdash A\ \mathsf{type}}{\Theta; \Gamma \vdash e\;A : [A/\alpha]B}
+                \]
+
+                We might then define the beta-reduction with the following rules: 
+
+                \[ 
+                    \frac{e_1 \to e_1'}{e_1 e_2 \to e_1' e_2} \quad \frac{e \to e'}{v\ e \to v\ e'}
+                \] 
+
+                \[ 
+                    \frac{}{(\lambda x: A. e) v \to [v / x] e}
+                \] 
+
+                \[ 
+                    \frac{e \to e'}{e A \to e' A} \quad \frac{}{(\Lambda \alpha. e) A  \to [A / \alpha] e}
+                \] 
+
+                Here, we further define beta-conversion as: two terms are beta-equivalent if one can be derived from the other in zero or more steps of beta reduction, beta expansion or alpha conversion. 
+
+                For PLC, we know we have proven type safety and termination. Given this and the fact that beta-reduction is confluent, we know that equivalent will eventually reduce to the same `normal' form, and thus equivalence is decideable. 
+            }
+
+        \item
+            Find, with justification, a PLC type $\tau$ for which the following typings
+            are both provable:
+            \begin{align*}
+                & \{\} \vdash \Lambda \alpha, \beta\, (\lambda x : \alpha\, (\lambda y : \beta\, (\Lambda \gamma\, (\lambda z : \tau\, (z\,x\,y))))) \\
+                & \quad : \forall \alpha, \beta\, (\alpha \to (\beta \to \forall \gamma\, (\tau \to \gamma)))
+            \end{align*}
+            \begin{align*}
+                & \{\} \vdash \Lambda \alpha, \beta\, (\lambda z : \forall \gamma\, (\tau \to \gamma)\, (z\,\alpha\, (\lambda x : \alpha\, (\lambda y : \beta\, (x))))) \\
+                & \quad : \forall \alpha, \beta\, ((\forall \gamma\, (\tau \to \gamma)) \to \alpha)
+            \end{align*}
+            \qmarks{5 marks}
+
+            \answer{
+                In the first typing, we note thast $z$ which is of type $\tau$ takes in $x: \alpha$ and $y: \beta$. Its type signature suggests that the output of $z$ will be of type $\gamma$. 
+
+                In the second typing, we again see something similar, so we note that $\tau$ will be of type $\alpha \to \beta \to \gamma$.
+            }
+
+        \item
+            Give infinitely many different closed PLC expressions in beta-normal form of
+            type $\forall \alpha\, ((\alpha \to \alpha) \to (\alpha \to \alpha))$.
+            \qmarks{2 marks}
+
+            \answer{
+                $\forall \alpha.\, (\alpha \to \alpha) \to (\alpha \to \alpha)$
+                \[
+                    \Lambda \alpha.\, \lambda f : (\alpha \to \alpha).\, \lambda x : \alpha.\, f^n\,x
+                \]
+            }
+
+        \item
+            Use your answer to part (a) to show that there is no closed PLC expression
+            $Y$ of type $\forall \alpha\, ((\alpha \to \alpha) \to \alpha)$ for which the
+            beta-reduction $Y\,\alpha\,f \to f(Y\,\alpha\,f)$ holds. \qmarks{3 marks}
+
+            \answer{
+                $Y : \forall \alpha.\, (\alpha \to \alpha) \to \alpha$
+
+                We need to prove there is no $Y$ satisfying $Y\,\alpha\,f \to f(Y\,\alpha\,f)$, where $f$ is of type $\alpha \to \alpha$.
+
+                We note that if the beta reduction holds, we would have an infinitely reducing chain looking like $Y\,\alpha\,f \to f(Y\,\alpha\,f) \to f ( f (Y\, \alpha\, f)) \to \cdots$, which contradicts the claim that all well-typed terms in PLC terminate. 
+            }
+
+    \end{enumerate}
+
+\end{examquestion}
+
+\begin{examquestion}{2011}{8}{14}
+    Terms in the polymorphic lambda calculus (PLC) are given by the grammar
+    \[
+        M ::= x \mid \lambda x : \tau\, (M) \mid M\,M \mid \Lambda \alpha\, (M) \mid M\,\tau
+    \]
+    where $\tau$ is a type, $\alpha$ a type variable and $x$ a variable.
+
+    \begin{enumerate}
+        \item
+            Give the rules for the type system in PLC. \qmarks{2 marks}
+
+            \answer{
+                \[
+                    \frac{x : A \in \Gamma}{\Theta; \Gamma \vdash x : A}
+                    \qquad
+                    \frac{\Theta; \Gamma, x : A \vdash e : B}{\Theta; \Gamma \vdash \lambda x : A.\, e : A \to B}
+                \]
+
+                \[
+                    \frac{\Theta; \Gamma \vdash e_1 : A \to B \quad \Theta; \Gamma \vdash e_2 : A}{\Theta; \Gamma \vdash e_1\;e_2 : B}
+                    \qquad
+                    \frac{\Theta, \alpha; \Gamma \vdash e : A}{\Theta; \Gamma \vdash \Lambda \alpha.\, e : \forall \alpha.\, A}
+                \]
+
+                \[
+                    \frac{\Theta, \alpha; \Gamma \vdash e : B \quad \Theta \vdash A\ \mathsf{type}}{\Theta; \Gamma \vdash e\;A : [A/\alpha]B}
+                \]
+            }
+
+        \item
+            Give the rules for the relation, $\to_\beta$, of beta-reduction in PLC.
+            Explain what it means for a term to be beta-normal. \qmarks{3 marks}
+
+            \answer{
+                \[
+                    \frac{M_1 \to M_1'}{M_1\,M_2 \to M_1'\,M_2}
+                    \qquad
+                    \frac{M \to M'}{v\,M \to v\,M'}
+                \]
+                \[
+                    (\lambda x : \tau.\, M)\,M' \to [M'/x]M
+                \]
+                \[
+                    \frac{M \to M'}{M\,\tau \to M'\,\tau}
+                    \qquad
+                    (\Lambda \alpha.\, M)\,\tau \to [\tau/\alpha]M
+                \]
+                where
+                \[
+                    v ::= x \mid \lambda x : \tau.\, M \mid \Lambda \alpha.\, M
+                \]
+
+                Beta normal if it is a value. 
+
+                (Not sure if we normally include this, but seems like we need this for c)
+
+                \[\frac{M \to M'}{\lambda x:A. M \to \lambda x:A . M'}\]
+            }
+
+        \item
+            Terms in \emph{head-normal form}, $H$, can be described in PLC by the grammar
+            \begin{align*}
+                A &::= x \mid A\,H \mid A\,\tau \\
+                H &::= A \mid \lambda x : \tau\, (H) \mid \Lambda \alpha\, (H)
+            \end{align*}
+            Arguing by induction on the structure of terms, or otherwise, prove that
+            every term in PLC that is both typable and beta-normal is of head-normal
+            form. \qmarks{8 marks}
+
+            \answer{
+                \begin{align*}
+                    A &::= x \mid A\,H \mid A\,\tau \\
+                    H &::= A \mid \lambda x : \tau.\, H \mid \Lambda \alpha\, (H)
+                \end{align*}
+
+                \textbf{RTP:} If $\Theta; \Gamma \vdash e : A \wedge e \not\to$, then $e$ is in head normal form.
+
+                We proceed by structural induction on
+                \[
+                    M ::= x \mid \lambda x : \tau.\, M \mid M\,M \mid \Lambda \alpha.\, M \mid M\,\tau
+                \]
+                Consider
+                \[
+                    \Phi(e) \triangleq \text{if } \Gamma \vdash e : T \wedge e \not\to \text{ then } e \text{ is in head normal form}
+                \]
+
+                \textit{Case 1:} $x$. Assume $\Gamma \vdash x : T \wedge x \not\to$. Trivially, $e$ is in head normal form.
+
+                \textit{Case 2:} $\lambda x : \tau.\, M$. 
+
+                By inversion, we know M is typeable. We further note that because this is in beta normal form, M is beta-normal as well. Hence, M is head normal, and thus $\lambda x: \tau.M$ is also head-normal
+
+                \textit{Case 3:} $\Lambda \alpha. M$. 
+
+                By inversion, we know M is typeable. We further note that because this is in beta normal form, M is beta-normal as well. Hence, M is head normal, and thus $\Lambda \alpha.M$ is also head-normal
+
+                \textit{Case 4:} $M_1\,M_2$. Assume $\Phi(M_1) \wedge \Phi(M_2)$. By a similar argument of typability and beta-normal of $M_1 M_2$, we have that $M_1$ and $M_2$ are both head-normal. Looking at $M_1$, it cannot be of form $\lambda x: \tau. H$ else it would be able to reduce, hence is not beta normal, and also cannot be of form $\Lambda \alpha . H$, as it would not type check. This thus must be of the form $A$, and hence we can see that the term is of head-nromal form. 
+
+                \textit{Case 5:} $M \tau$. Assume $\Phi(M))$. By a similar argument of typability and beta-normal of $M \tau$, we have that $M$ is head-normal. Looking at $M$, it cannot be of form $\lambda x: \tau. H$ else it would not type check. It also cannot be of form $\Lambda \alpha . H$, as it could reduce further and not be beta normal.. This thus must be of the form $A$, and hence we can see that the term is of head-normal form. 
+
+            }
+
+        \item
+            Natural numbers can be encoded into PLC using the type $\mathit{nat}$ defined
+            as
+            \[
+                \mathit{nat} \stackrel{\text{def}}{=} \forall \alpha\, (\alpha \to (\alpha \to \alpha) \to \alpha)
+            \]
+            The encoding uses the Church-numerals defined as
+            \[
+                \overline{n} \stackrel{\text{def}}{=} \Lambda \alpha\, (\lambda x : \alpha\, (\lambda y : \alpha \to \alpha\, (\underbrace{y\, (y\, (y \ldots (y\,x) \ldots)}_{n \text{ occurrences}}))))
+            \]
+            Prove that the Church-numerals are the only closed, beta-normal terms of type
+            $\mathit{nat}$.
+
+            Hint: Use the result proved in part (c) and do a case analysis over the form
+            of terms in head-normal form. You may assume without proof that if
+            $\Gamma \vdash M : \tau$ is provable in the PLC type system, then the free
+            variables of the term $M$ are contained in the domain of the typing
+            environment $\Gamma$. \qmarks{7 marks}
+
+            \answer{
+                Type $\mathit{nat}$ defined as
+                \[
+                    \mathit{nat} \triangleq \forall \alpha\, (\alpha \to (\alpha \to \alpha) \to \alpha)
+                \]
+                Church numerals as
+                \[
+                    \overline{n} \triangleq \Lambda \alpha.\, \lambda z : \alpha.\, \lambda s : \alpha \to \alpha.\, s^n\,z
+                \]
+                \textbf{RTP:} these are the only closed beta normal terms.
+
+                We note in (c) we proved that if typable and beta normal, then head normal. So we want to prove that if $\cdot \vdash e : \forall \alpha\, (\alpha \to (\alpha \to \alpha) \to \alpha)$ and $e$ is closed and beta normal, then $e$ is of the form $\overline{n}$.
+
+                Suppose we have another closed beta normal term of type $\mathit{nat}$ that is not a Church numeral. By (c), it is of head normal form. Then, $e$ is of the form $A$, $\lambda x : \tau\, (H)$ or $\Lambda \alpha.\, H$. Repeating this argument, It can only be of the form
+                \[
+                    \Lambda \alpha.\, \lambda x : \alpha.\, \lambda y : \alpha \to \alpha.\, H
+                \]
+                The last $H$ must be of some form $A$; given $x$ and $y$ and output $\alpha$, it can only be some number of applications. This, this term must be of the form 
+                \[
+                    \Lambda \alpha.\, \lambda x : \alpha.\, \lambda y : \alpha \to \alpha.\, y^n x 
+                \]
+            }
+
+    \end{enumerate}
+
+\end{examquestion}
+
+\end{document}
+
