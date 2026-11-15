@@ -1,0 +1,229 @@
+% Include the per-supervision info file.
+\input{./infofile.tex}
+
+\documentclass[10pt,\jkfside,a4paper]{article}
+
+% Pull in the template, configured as above.
+\input{../template/template.tex}
+
+% If you have any additional \usepackage commands, or other
+% macros or directives, put them here.  Remember not to edit
+% files in the template directory because any changes will
+% be overwritten when template updates are issued.
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage[breakable]{tcolorbox}
+
+\newcommand{\answer}[1]{
+    \begin{tcolorbox}[colframe=black, colback=white, sharp corners, boxrule=0.2mm, breakable]
+        #1
+    \end{tcolorbox}
+}
+
+% Question-type tag, e.g. \qtype{U}
+\newcommand{\qtype}[1]{\textbf{[#1]}~}
+
+\begin{document}
+
+% Your work here.
+% See example_sv/example.tex for LaTeX examples.
+
+\textbf{Topics: Definition of information, Entropy (one RV), Weighing Problems, Unique Decodability, Huffman coding}
+
+{\small
+Key to question types:
+U: Core understanding (regurgitating notes);
+S: Standard (need to engage brain but should not take long);
+C: More challenging (errr\ldots\ more challenging);
+P: Exercise from MacKay.
+}
+
+\begin{enumerate}
+    \item
+    \qtype{U}
+    For each of the properties Shannon identified for information (desiderata) explain why it is necessary.
+
+    \answer{
+    }
+
+    \item
+    \qtype{U}
+    Write a short argument for why the definition of Shannon Information is a meaningful representation of information, targeted at a fellow Part II student who is not taking Information Theory.
+
+    \answer{
+    }
+
+    \item
+    \qtype{S}
+    Calculate the entropy in bits for each of the following random variables:
+    \begin{enumerate}
+        \item
+        Pixel values in an image whose possible grey values are all the integers from 0 to 255 with uniform probability.
+
+        \answer{
+            This is given by
+
+            \[
+                \sum_{i=1}^{255} \frac{1}{255} \log(\frac{1}{255})
+            \]
+
+            This is thus $\log{\frac{1}{255}}$. 
+        }
+
+        \item
+        Humans classified according to whether they are, or are not, mammals.
+
+        \answer{
+            We might assume that humans are always mammals, so we might just assume that the entropy is 0.
+        }
+
+        \item
+        Gender in a tri-sexed insect population whose three genders occur with probabilities $1/4$, $1/4$, and $1/2$.
+
+        \answer{
+            \begin{align*}
+                \frac{1}{4} \log{\frac{1}{4}} + \frac{1}{4} \log{\frac{1}{4}} + \frac{1}{2} \log{\frac{1}{2}} &= 
+                \frac{1}{2} \log{\frac{1}{4}} + \frac{1}{2} \log{\frac{1}{2}} \\ 
+                &= - \frac{3}{2} \log{2} \\ 
+            \end{align*}
+        }
+
+        \item
+        A population of persons classified by whether they are older, or not older, than the population's median age.
+
+        \answer{
+            We merely need to recognise that given an arbitrary person, there is an equal probability that their are older or not older than the populations median age. Thus, the entropy oh this random variable is just 
+
+            \[
+                -\log{2}
+            \]
+        }
+    \end{enumerate}
+
+    \item
+    \qtype{S}
+    We argued that Shannon Information should be both logarithmic and increase when the probability of an event decreases. Comment on whether the following could be valid definitions of information:
+    \begin{enumerate}
+        \item
+        $\log\left(1 - P(x)\right)$
+
+        \answer{
+            We note that original Shannon Information is given by $\log{\frac{1}{P(x)}}$. Since its logarithmic, and as $P(x)$ increases, $1 - P(x)$ decreases and thus $\log{1 - P(x)}$ decreases. 
+
+        }
+
+        \item
+        $\displaystyle \log \frac{1}{P(x)^2}$
+
+        \answer{
+            We note that original Shannon Information is given by $\log{\frac{1}{P(x)}}$. We note that this new formula is equivalent to $2 \log \frac{1}{P(x)}$, we might expect this is a valid definition of information, given it would also be logarithmic and decreasing as the probability of an event increases. 
+        }
+    \end{enumerate}
+
+    \item
+    \qtype{S}
+    Prove the maximum entropy under the constraint of an average value takes the exponential form stated in Lecture~1.
+
+    \answer{
+        We want to maximise 
+        
+        \[ L(P_1, \cdots, P_m) = - \sum_{i=1}^{n} P_i \log{P_i} - \sum_{j=0}^{m} \lambda_j f(P_1, \cdots, P_n) \]
+
+        Differentiating with respect to $P_i$, 
+
+        \[
+            \frac{dL(P_1, \cdots, P_n)}{dP_i} = - \log{P_i} - 1 - \sum_{j=0}^{m} \lambda_j \frac{f(P_1, \cdots, P_n)}{dP_i} 
+        \]
+
+        
+    }
+
+    \item
+    \qtype{S}
+    Using Lagrangian multipliers, maximise:
+    \begin{enumerate}
+        \item
+        $f(x, y) = (x - 1)^2 + (y - 5)^2$ under the constraint $3x + 4y = 0$
+
+        \answer{
+        }
+
+        \item
+        $f(x, y) = x^2 + y^2$ under the constraint $x^2 + 4y^2 = 16$
+
+        \answer{
+        }
+
+        \item
+        $f(x, y, z) = xyz$ under the constraints $x^2 + y^2 + z^2 = 12$ and $x = y$
+
+        \answer{
+        }
+    \end{enumerate}
+
+    \item
+    \qtype{S}
+    For the weighing problem with 10 balls, one of which is heavy, draw out a possible solution to finding the heavy ball in no more than 3 weighings. Now annotate each branch from each weighing with the information gained by following that branch. At each leaf, compute the total information gained for that branch.
+
+    \answer{
+    }
+
+    \item
+    \qtype{S}
+    [MacKay ex.~4.9] While some people, when they first encounter the weighing problem with 12 balls and the three-outcome balance, think that weighing six balls against six balls is a good first weighing, others say `no, weighing six against six conveys no information at all'. Explain to the second group why they are both right and wrong. Compute the information gained about which is the odd ball, and the information gained about which is the odd ball and whether it is heavy or light.
+
+    \answer{
+    }
+
+    \item
+    \qtype{C}
+    [MacKay ex.~4.13] You are given 12 balls, all of equal weight except for one, which is either heavier \emph{or} lighter than the others; you do not know which. Using a three-outcome balance, find a strategy that identifies the odd ball, and whether it is heavy or light, in three weighings. Then generalise to the $N$-ball problem: show that in $W$ weighings the odd ball, and whether it is heavy or light, can be identified from among $N = (3^W - 3)/2$ balls.
+
+    \answer{
+    }
+
+    \item
+    \qtype{S}
+    [MacKay ex.~5.19] Is the code $\{00, 11, 0101, 111, 1010, 100100, 0110\}$ uniquely decodable? If not, give an example of an ambiguous message.
+
+    \answer{
+    }
+
+    \item
+    \qtype{S}
+    [MacKay ex.~5.20] Is the ternary code $\{00, 012, 0110, 0112, 100, 201, 212, 22\}$ uniquely decodable?
+
+    \answer{
+    }
+
+    \item
+    \qtype{S}
+    [MacKay ex.~5.21] Make Huffman codes for $X^2$, $X^3$ and $X^4$ where $\mathcal{A}_X = \{0, 1\}$ and $\mathcal{P}_X = \{0.9, 0.1\}$. Compute their expected lengths and compare them with the entropies $H(X^2)$, $H(X^3)$ and $H(X^4)$. Repeat this exercise for $X^2$ and $X^4$ where $\mathcal{P}_X = \{0.6, 0.4\}$.
+
+    \answer{
+    }
+
+    \item
+    \qtype{C}
+    Is it possible for two people to use the same set of alphabet probabilities to produce Huffman codes with a differing set of lengths?
+
+    \answer{
+    }
+
+    \item
+    \qtype{C}
+    Consider the following symbol encoding scheme:
+    \begin{itemize}
+        \item Each input symbol is associated with a probability of occurrence and an initially blank codeword.
+        \item Partition the set of input symbols into two subsets, where the sum of the probabilities in each subset is as close to equal as possible.
+        \item Append a 0 to every codeword in the first subset and a 1 to every codeword in the second subset.
+        \item Recurse on each subset until there is only one symbol left in each partition.
+    \end{itemize}
+    Does this produce instantaneous codes? How does it compare to Huffman coding? (Note the full analysis of the average codeword length is non-trivial and not required. But that shouldn't stop you trying.)
+
+    \answer{
+    }
+\end{enumerate}
+
+\end{document}
+
