@@ -44,6 +44,24 @@ P: Exercise from MacKay.
     For each of the properties Shannon identified for information (desiderata) explain why it is necessary.
 
     \answer{
+        We note that 5 properties were identified here. They are: 
+
+        \begin{enumerate} 
+            \item 
+            Continuity: We would not expect the information to change drastically as the probability of a single event chnages smoothly.
+
+            \item 
+            Symmetry: Slightly confused about the statement of this property.
+
+            \item 
+            Additive: This property states that we would expect $I(X=x, Y=y) = I(X=x) + I(Y=y)$ for independent $X, Y$. We would deem this to be necessary as $X$ and $Y$ are independent, as information gained from one event would not influence the information gained from the other event. This additive property would be necessary to satisify this. 
+
+            \item 
+            Monotonicity: We wouldny expect a more probable event to carry more information - we would already expect this event, and something that we expect to happen actually happening would likely give us little evidence / information about the situation differing from what we percieve it to. 
+
+            \item 
+            Positivity: If we assume that the information that we get from a certain information is consistent with all the ifnromation previously given, they can either give no information, or some additional information, but cannot take away information. We thus would expect the information from an event to be non-negative.
+        \end{enumerate}
     }
 
     \item
@@ -109,6 +127,8 @@ P: Exercise from MacKay.
 
         \answer{
             We note that original Shannon Information is given by $\log{\frac{1}{P(x)}}$. Since its logarithmic, and as $P(x)$ increases, $1 - P(x)$ decreases and thus $\log{1 - P(x)}$ decreases. 
+             
+            We should however note that this is not additive. 
 
         }
 
@@ -117,6 +137,8 @@ P: Exercise from MacKay.
 
         \answer{
             We note that original Shannon Information is given by $\log{\frac{1}{P(x)}}$. We note that this new formula is equivalent to $2 \log \frac{1}{P(x)}$, we might expect this is a valid definition of information, given it would also be logarithmic and decreasing as the probability of an event increases. 
+
+            In this case, this is additive, monotonic and positive. 
         }
     \end{enumerate}
 

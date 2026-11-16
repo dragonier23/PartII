@@ -1,0 +1,367 @@
+% Include the per-supervision info file.
+\input{./infofile.tex}
+
+\documentclass[10pt,\jkfside,a4paper]{article}
+
+% Pull in the template, configured as above.
+\input{../template/template.tex}
+
+% If you have any additional \usepackage commands, or other
+% macros or directives, put them here.  Remember not to edit
+% files in the template directory because any changes will
+% be overwritten when template updates are issued.
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage[breakable]{tcolorbox}
+
+\newcommand{\answer}[1]{
+    \begin{tcolorbox}[colframe=black, colback=white, sharp corners, boxrule=0.2mm, breakable]
+        #1
+    \end{tcolorbox}
+}
+
+% Right-aligned mark allocation, e.g. \qmarks{5 marks}
+\newcommand{\qmarks}[1]{{\unskip\nobreak\hfil\penalty50\hskip2em\hbox{}\nobreak\hfil[#1]%
+    \parfillskip=0pt \finalhyphendemerits=0 \par}}
+
+% Notation
+\newcommand{\fix}{\mathit{fix}}
+\newcommand{\Idl}{\mathit{Idl}}
+
+\begin{document}
+
+% Your work here.
+% See example_sv/example.tex for LaTeX examples.
+
+%% ---------------------------------------------------------------- Q1
+\begin{examquestion}{2011}{7}{5}
+\begin{enumerate}
+    \item
+    Let $\Omega$ be the domain
+    \[
+        0 \sqsubseteq 1 \sqsubseteq \cdots \sqsubseteq n \sqsubseteq \cdots \sqsubseteq \omega
+        \qquad (n \in \mathbb{N})
+    \]
+    (That is, $\Omega = \bigl(\mathbb{N} \cup \{\omega\}, \sqsubseteq\bigr)$ with $x \sqsubseteq y$ in $\Omega$ iff $x \le y$ in $\mathbb{N}$ or $y = \omega$.)
+
+    Indicate whether the following statements are true or false. Provide an argument for each answer.
+    \begin{enumerate}
+        \item
+        Every monotone function from $\Omega$ to $\Omega$ is continuous. \qmarks{5 marks}
+
+        \answer{
+        }
+
+        \item
+        Every monotone function from $\Omega$ to $\Omega$ has a least pre-fixed point. \qmarks{5 marks}
+
+        \answer{
+        }
+    \end{enumerate}
+
+    \item
+    Let $D$ and $E$ be domains, and let $f : D \to D$ and $g : E \to E$ be continuous functions.
+    \begin{enumerate}
+        \item
+        Define $f \times g : D \times E \to D \times E$ to be the continuous function given by $\bigl(f \times g\bigr)(d, e) = \bigl(f(d), g(e)\bigr)$, and let $\pi_1 : D \times E \to D$ and $\pi_2 : D \times E \to E$ respectively denote the first and second projection functions.
+
+        Show that $\fix(f \times g) \sqsubseteq \bigl(\fix(f), \fix(g)\bigr)$, and that $\fix(f) \sqsubseteq \pi_1\bigl(\fix(f \times g)\bigr)$ and $\fix(g) \sqsubseteq \pi_2\bigl(\fix(f \times g)\bigr)$. \qmarks{5 marks}
+
+        \answer{
+        }
+
+        \item
+        It follows from part (i) that $\fix(f \times g) = \bigl(\fix(f), \fix(g)\bigr)$. Use this and Scott's Fixed Point Induction Principle to show that, for all strict continuous functions $h : D \to E$,
+        \[
+            h \circ f = g \circ h \implies h\bigl(\fix(f)\bigr) = \fix(g) \tag*{[5 marks]}
+        \]
+
+        \answer{
+        }
+    \end{enumerate}
+\end{enumerate}
+\end{examquestion}
+
+%% ---------------------------------------------------------------- Q2
+\begin{examquestion}{2012}{7}{6}
+\begin{enumerate}
+    \item
+    If $D$ and $D'$ are domains, explain what is the \emph{function domain} $D \to D'$; give its partial order and least element, and explain how least upper bounds of chains are calculated in it. \qmarks{4 marks}
+
+    \answer{
+    }
+
+    \item
+    An element $d$ of a domain $D$ is said to be \emph{isolated} if for all countable chains $x_0 \sqsubseteq x_1 \sqsubseteq x_2 \sqsubseteq \ldots$ in $D$ with $d \sqsubseteq \bigsqcup_{n \ge 0} x_n$, there exists $i \ge 0$ with $d \sqsubseteq x_i$. We write $K(D)$ for the subset of isolated elements.
+
+    Given domains $D$ and $D'$ and elements $d \in D$ and $d' \in D'$, let $[d, d'] : D \to D'$ be the function mapping each $x \in D$ to $d'$ if $d \sqsubseteq x$ and to $\bot$ otherwise.
+    \begin{enumerate}
+        \item
+        Prove that $[d, d']$ is monotone. \qmarks{2 marks}
+
+        \answer{
+        }
+
+        \item
+        Prove that if $f : D \to D'$ is monotone, then $[d, d'] \sqsubseteq f$ if and only if $d' \sqsubseteq f(d)$. \qmarks{2 marks}
+
+        \answer{
+        }
+
+        \item
+        Prove that if $d \in K(D)$, then $[d, d']$ is an element of the function domain $D \to D'$. \qmarks{3 marks}
+
+        \answer{
+        }
+
+        \item
+        Prove that if both $d \in K(D)$ and $d' \in K(D')$, then $[d, d']$ is an isolated element of the function domain $D \to D'$. \qmarks{3 marks}
+
+        \answer{
+        }
+
+        \item
+        Now suppose that every element of $D$ is the least upper bound of some countable chain of isolated elements and the same is true for $D'$. Show that each element $f$ of the function domain $D \to D'$ is the least upper bound of the subset $F \stackrel{\mathrm{def}}{=} \{[d, d'] \mid d \in K(D) \mathrel{\&} d' \in K(D') \mathrel{\&} d' \sqsubseteq f(d)\}$. \qmarks{6 marks}
+
+        \answer{
+        }
+    \end{enumerate}
+\end{enumerate}
+\end{examquestion}
+
+%% ---------------------------------------------------------------- Q3
+\begin{examquestion}{2018}{9}{5}
+\begin{enumerate}
+    \item
+    Give the definitions of poset (partially ordered set), cpo (chain complete poset), and domain. \qmarks{2 marks}
+
+    \answer{
+    }
+
+    \item
+    An \emph{ideal} $I$ of a poset $\mathsf{P} = (P, \le)$ is a subset $I$ of the set $P$ such that:
+    \begin{itemize}
+        \item $I$ is non-empty,
+        \item for every $x \in I$ and $y \in P$, $y \le x$ implies $y \in I$, and
+        \item for every $x, y \in I$, there is $u \in I$ such that $x \le u$ and $y \le u$.
+    \end{itemize}
+    We write $\Idl(\mathsf{P})$, where $\mathsf{P}$ is a poset, for the set of all the ideals of $\mathsf{P}$.
+    \begin{enumerate}
+        \item
+        Show that $(\Idl(\mathsf{P}), \subseteq)$, where $\subseteq$ denotes the subset-inclusion relation, is a cpo. \qmarks{3 marks}
+
+        \answer{
+        }
+
+        \item
+        Show that $\Idl(P, \le)$ is non-empty iff $P$ is non-empty. \qmarks{2 marks}
+
+        \answer{
+        }
+
+        \item
+        Give a necessary and sufficient condition on a poset $\mathsf{P}$ for the cpo $(\Idl(\mathsf{P}), \subseteq)$ to be a domain. Justify your answer. \qmarks{2 marks}
+
+        \answer{
+        }
+    \end{enumerate}
+
+    \item
+    Give the definitions of monotone function between posets and of continuous function between cpos. \qmarks{2 marks}
+
+    \answer{
+    }
+
+    \item
+    \begin{enumerate}
+        \item
+        For a monotone function $f : \mathsf{P} \to \mathsf{Q}$ between posets $\mathsf{P}$ and $\mathsf{Q}$, define a continuous function $f^{\#} : (\Idl(\mathsf{P}), \subseteq) \to (\Idl(\mathsf{Q}), \subseteq)$ between the cpos $(\Idl(\mathsf{P}), \subseteq)$ and $(\Idl(\mathsf{Q}), \subseteq)$. Prove that your definition is as requested. \qmarks{4 marks}
+
+        \answer{
+        }
+
+        \item
+        For the identity function $\mathit{id}_{\mathsf{P}}$ on a poset $\mathsf{P}$, show that $(\mathit{id}_{\mathsf{P}})^{\#}$ is the identity function on the cpo $(\Idl(\mathsf{P}), \subseteq)$. \qmarks{1 mark}
+
+        \answer{
+        }
+
+        \item
+        For monotone functions $f : \mathsf{P} \to \mathsf{Q}$ and $g : \mathsf{O} \to \mathsf{P}$ between posets $\mathsf{O}$, $\mathsf{P}$, and $\mathsf{Q}$, show that $f^{\#} \circ g^{\#} = (f \circ g)^{\#} : (\Idl(\mathsf{O}), \subseteq) \to (\Idl(\mathsf{Q}), \subseteq)$. \qmarks{4 marks}
+
+        \answer{
+        }
+    \end{enumerate}
+\end{enumerate}
+\end{examquestion}
+
+%% ---------------------------------------------------------------- Q4
+\begin{examquestion}{2020}{8}{6}
+\begin{enumerate}
+    \item
+    For a poset $(P, \sqsubseteq)$, the \emph{join} of $x, y \in P$ is defined to be the element $x \sqcup y \in P$ such that
+    \[
+        \forall\, p \in P.\; x \sqcup y \sqsubseteq p \iff (\, x \sqsubseteq p \land y \sqsubseteq p \,)
+    \]
+    A poset is said to be \emph{join complete} if every pair of elements in it has a join.
+
+    For a join-complete cpo $D$, show that the function $\sqcup : D \times D \to D$ mapping $(x, y) \in D \times D$ to $x \sqcup y \in D$ is continuous. \qmarks{8 marks}
+
+    \answer{
+    }
+
+    \item
+    Let $(D, \sqsubseteq)$ be a domain.
+    \begin{enumerate}
+        \item
+        For a continuous function $f : D \to D$, prove that the subset of $D$
+        \[
+            \widehat{f} \;=\; \{\, x \in D \mid f(x) \sqsubseteq x \,\}
+        \]
+        ordered by $\sqsubseteq$ is a domain. \qmarks{6 marks}
+
+        \answer{
+        }
+
+        \item
+        For $d \in D$, let ${\uparrow}(d) = \{\, x \in D \mid d \sqsubseteq x \,\}$.
+
+        For a continuous function $g : D \to D$, prove that if $(D, \sqsubseteq)$ is join complete then, for all $d \in D$, the subset of $D$
+        \[
+            {\uparrow}(d) \cap \widehat{g}
+        \]
+        ordered by $\sqsubseteq$ is a domain. \qmarks{6 marks}
+
+        \answer{
+        }
+    \end{enumerate}
+\end{enumerate}
+\end{examquestion}
+
+%% ---------------------------------------------------------------- Q5
+\begin{examquestion}{2021}{8}{6}
+A \emph{right adjoint} of a monotone function $f : P \to Q$ between posets is a monotone function $g : Q \to P$ such that $\mathrm{id}_P \sqsubseteq g \circ f$ and $f \circ g \sqsubseteq \mathrm{id}_Q$.
+
+Let $f : P \to Q$ be a monotone function with a right adjoint $g : Q \to P$.
+\begin{enumerate}
+    \item
+    For $p \in P$ and $q \in Q$, prove that $f(p) \sqsubseteq_Q q$ if, and only if, $p \sqsubseteq_P g(q)$. \qmarks{4 marks}
+
+    \answer{
+    }
+\end{enumerate}
+
+Let $h : P \to P$ and $\ell : Q \to Q$ be monotone functions such that $f \circ h = \ell \circ f : P \to Q$.
+\begin{enumerate}[resume]
+    \item
+    Prove that if $h$ has a least pre-fixed point $\fix(h)$ then $f(\fix(h))$ is a least pre-fixed point of $\ell$. \qmarks{8 marks}
+
+    \answer{
+    }
+\end{enumerate}
+
+Further assume that $g \circ f = \mathrm{id}_P$, in which case $f$ is said to be an \emph{embedding} and $g$ a \emph{projection}.
+\begin{enumerate}[resume]
+    \item
+    Prove that if $\ell$ has a least pre-fixed point $\fix(\ell)$ then $g(\fix(\ell))$ is a least pre-fixed point of $h$. \qmarks{8 marks}
+
+    \answer{
+    }
+\end{enumerate}
+\end{examquestion}
+
+%% ---------------------------------------------------------------- Q6
+\begin{examquestion}{2022}{8}{4}
+\begin{enumerate}
+    \item
+    For posets $D$ and $E$, and for monotone functions $f : D \to E$ and $g : E \to D$, we write $f : D \cong E : g$ whenever $g \circ f = \mathrm{id}_D$ and $f \circ g = \mathrm{id}_E$. Moreover, we say that $D$ and $E$ are \emph{isomorphic}, and write $D \cong E$, whenever $f : D \cong E : g$ for some $f$ and $g$.
+
+    Prove that for domains $D$ and $E$, and for monotone functions $f : D \to E$ and $g : E \to D$, if $f : D \cong E : g$ then $f$ and $g$ are continuous. \qmarks{4 marks}
+
+    \answer{
+    }
+
+    \item
+    A \emph{refsym} is defined to be a pair $\underline{A} = (A, \sim_A)$ consisting of a set $A$ together with a binary relation on it ${\sim_A} \subseteq A \times A$ that is reflexive (namely, $x \sim_A x$ for all $x \in A$) and symmetric (namely, $x \sim_A y$ implies $y \sim_A x$ for all $x, y \in A$).
+
+    For a refsym $\underline{A} = (A, \sim_A)$, define $\Delta(\underline{A}) = \{\, \alpha \subseteq A \mid \forall\, x, y \in \alpha.\; x \sim_A y \,\}$.
+    \begin{enumerate}
+        \item
+        Prove that for a refsym $\underline{A}$, the pair $\mathrm{D}(\underline{A}) = (\Delta(\underline{A}), \subseteq)$ is a domain. \qmarks{5 marks}
+
+        \answer{
+        }
+
+        \item
+        For a set $A$, define a refsym $F(A)$ such that the domain $\mathrm{D}(F(A))$ and the flat domain $A_\bot$ are isomorphic. Establish the isomorphism $\mathrm{D}(F(A)) \cong A_\bot$. \qmarks{5 marks}
+
+        \answer{
+        }
+
+        \item
+        For refsyms $\underline{A}_1$ and $\underline{A}_2$ define a refsym $P(\underline{A}_1, \underline{A}_2)$ such that the domain $\mathrm{D}(P(\underline{A}_1, \underline{A}_2))$ and the product domain $\mathrm{D}(\underline{A}_1) \times \mathrm{D}(\underline{A}_2)$ are isomorphic. Establish the isomorphism $\mathrm{D}(P(\underline{A}_1, \underline{A}_2)) \cong \mathrm{D}(\underline{A}_1) \times \mathrm{D}(\underline{A}_2)$. \qmarks{6 marks}
+
+        \answer{
+        }
+    \end{enumerate}
+\end{enumerate}
+\end{examquestion}
+
+%% ---------------------------------------------------------------- Q7
+\begin{examquestion}{2024}{8}{4}
+In all parts of this question, you are allowed to use theorems from the course, provided you state them precisely beforehand.
+
+Define the \emph{smash product} $D \otimes E$ of two domains $D$ and $E$ to be the set
+\[
+    \{(x, y) \in D \times E \mid x \neq \bot_D \land y \neq \bot_E\} \cup \{\bot_{D \otimes E}\}
+\]
+where $\bot_{D \otimes E}$ is a new element which is not a pair. This set is equipped with the order $\sqsubseteq_{D \otimes E}$ such that $\bot_{D \otimes E} \sqsubseteq_{D \otimes E} z$ for any $z$, and $(x, y) \sqsubseteq_{D \otimes E} (x', y')$ if and only if $x \sqsubseteq_D x'$ and $y \sqsubseteq_E y'$.
+\begin{enumerate}
+    \item
+    Show that the smash product of two domains is a domain. \qmarks{4 marks}
+
+    \answer{
+    }
+
+    \item
+    Given three domains $D$, $E$ and $F$, we call a function $f \in D \times E \to F$ \emph{bistrict} if for any $x \in D$ and $y \in E$, $f(\bot, y) = \bot$ and $f(x, \bot) = \bot$.
+
+    Show that not all strict functions are bistrict. \qmarks{3 marks}
+
+    \answer{
+    }
+
+    \item
+    Let $D$, $E$ and $F$ be domains, and $f : D \times E \to F$ a function. Give a condition on the currying $\mathrm{cur}(f) : D \to (E \to F)$ of $f$ that is necessary and sufficient for $f$ to be bistrict. \qmarks{4 marks}
+
+    \answer{
+    }
+
+    \item
+    We define the function smash as follows:
+    \[
+        \begin{array}{rrcll}
+            \mathrm{smash} : & D \times E & \to     & D \otimes E      & \\
+                             & (x, y)     & \mapsto & (x, y)           & \text{if } x \neq \bot \text{ and } y \neq \bot \\
+                             & (x, y)     & \mapsto & \bot_{D \otimes E} & \text{otherwise}
+        \end{array}
+    \]
+    Show that if $f : D \times E \to F$ is continuous and bistrict, then there exists a unique $\tilde{f} : D \otimes E \to F$ that is strict and continuous and such that $f = \tilde{f} \circ \mathrm{smash}$. \qmarks{4 marks}
+
+    \answer{
+    }
+
+    \item
+    Give the definition of $X_\bot$, the flat domain on a set $X$. \qmarks{1 mark}
+
+    \answer{
+    }
+
+    Given two sets $S$ and $T$, show that the domains $(S \times T)_\bot$ and $S_\bot \otimes T_\bot$ are isomorphic, \emph{i.e.}\ that there exist strict continuous functions $f : (S \times T)_\bot \to S_\bot \otimes T_\bot$ and $g : S_\bot \otimes T_\bot \to (S \times T)_\bot$ such that $f \circ g = \mathrm{id}$ and $g \circ f = \mathrm{id}$. \qmarks{4 marks}
+
+    \answer{
+    }
+\end{enumerate}
+\end{examquestion}
+
+\end{document}
