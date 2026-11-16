@@ -125,17 +125,40 @@ P: Exercise from MacKay.
     Prove the maximum entropy under the constraint of an average value takes the exponential form stated in Lecture~1.
 
     \answer{
-        We want to maximise 
-        
-        \[ L(P_1, \cdots, P_m) = - \sum_{i=1}^{n} P_i \log{P_i} - \sum_{j=0}^{m} \lambda_j f(P_1, \cdots, P_n) \]
-
-        Differentiating with respect to $P_i$, 
+        We have
 
         \[
-            \frac{dL(P_1, \cdots, P_n)}{dP_i} = - \log{P_i} - 1 - \sum_{j=0}^{m} \lambda_j \frac{f(P_1, \cdots, P_n)}{dP_i} 
+            L(P_0, \ldots, P_n) = - \sum_{i=0}^{n} P_i \log{P_i} - \lambda_1 \left( \sum_{i=0}^{n} P_i - 1 \right) - \lambda_2 \left( \sum_{i=0}^{n} P_i x_i - X \right)
         \]
 
-        
+        where $X$ is the constant, i.e.\ our average.
+
+        From $\frac{\partial L}{\partial \lambda_1}$ and $\frac{\partial L}{\partial \lambda_2}$ we recover that
+
+        \[
+            \sum_{i=0}^{n} P_i = 1 \quad \wedge \quad \sum_{i=0}^{n} P_i x_i = X
+        \]
+
+        and
+
+        \[
+            \frac{\partial L}{\partial P_i} = - \log{P_i} - 1 - \lambda_1 - \lambda_2 x_i
+        \]
+
+        Equating to 0, we get that
+
+        \[
+            P_i = e^{-1 - \lambda_1 - \lambda_2 x_i} = \frac{1}{e^{1 + \lambda_1 + \lambda_2 x_i}}
+        \]
+
+        Then
+
+        \begin{align*}
+            \sum_{i=0}^{n} P_i = 1 &= \sum_{i=0}^{n} e^{-1 - \lambda_1 - \lambda_2 x_i} \\
+            &= e^{-1 - \lambda_1} \left( \sum_{i=0}^{n} e^{-\lambda_2 x_i} \right) \\
+            \implies e^{-1 - \lambda_1} &= \frac{1}{\sum_{j} e^{-\lambda_2 x_j}} \\
+            \implies P_i &= \frac{e^{-\lambda_2 x_i}}{\sum_{j} e^{-\lambda_2 x_j}}
+        \end{align*}
     }
 
     \item
@@ -146,18 +169,81 @@ P: Exercise from MacKay.
         $f(x, y) = (x - 1)^2 + (y - 5)^2$ under the constraint $3x + 4y = 0$
 
         \answer{
+            Let
+
+            \[
+                L(x, y, \lambda) = (x - 1)^2 + (y - 5)^2 + \lambda (3x + 4y)
+            \]
+
+            \begin{align*}
+                \frac{\partial L}{\partial x} &= 2(x - 1) + 3\lambda \\
+                \frac{\partial L}{\partial y} &= 2(y - 5) + 4\lambda \\
+                \frac{\partial L}{\partial \lambda} &= 3x + 4y
+            \end{align*}
+
+            Equating to 0,
+
+            \begin{align*}
+                x &= 1 - \tfrac{3}{2}\lambda \\
+                y &= 5 - 2\lambda \\
+                3 - \tfrac{9}{2}\lambda + 20 - 8\lambda &= 0 \\
+                \implies \tfrac{25}{2}\lambda &= 23 \implies \lambda = \tfrac{46}{25} \\
+                \implies x &= 1 - \tfrac{69}{25} = -\tfrac{44}{25} \\
+                \implies y &= 5 - 2\left(\tfrac{46}{25}\right) = \tfrac{125 - 92}{25} = \tfrac{33}{25}
+            \end{align*}
         }
 
         \item
         $f(x, y) = x^2 + y^2$ under the constraint $x^2 + 4y^2 = 16$
 
         \answer{
+            Let $L(x, y, \lambda) = x^2 + y^2 - \lambda(x^2 + 4y^2 - 16)$.
+
+            \begin{align*}
+                \frac{\partial L}{\partial x} &= 2x - \lambda(2x) \implies (1 - \lambda) 2x = 0 \\
+                \frac{\partial L}{\partial y} &= 2y - \lambda(8y) \implies (1 - 4\lambda) 2y = 0 \\
+                \frac{\partial L}{\partial \lambda} &= -(x^2 + 4y^2 - 16) = 0 \implies x^2 + 4y^2 = 16
+            \end{align*}
+
+            \begin{itemize}
+                \item Case 1: $x = 0 \implies y = \pm 2$, $\lambda = \frac{1}{4}$
+                \item Case 2: $x \neq 0 \implies \lambda = 1 \implies y = 0 \implies x = \pm 4$
+            \end{itemize}
         }
 
         \item
         $f(x, y, z) = xyz$ under the constraints $x^2 + y^2 + z^2 = 12$ and $x = y$
 
         \answer{
+            \[
+                L(x, y, z, \lambda_1, \lambda_2) = xyz - \lambda_1(x - y) - \lambda_2(x^2 + y^2 + z^2 - 12)
+            \]
+
+            \begin{align*}
+                \frac{\partial L}{\partial x} &= yz - \lambda_1 - 2\lambda_2 x = 0 \\
+                \frac{\partial L}{\partial y} &= xz + \lambda_1 - 2\lambda_2 y = 0 \\
+                \frac{\partial L}{\partial z} &= xy - 2\lambda_2 z = 0 \\
+                \frac{\partial L}{\partial \lambda_1} &= y - x = 0 \implies x = y \\
+                \frac{\partial L}{\partial \lambda_2} &= -(x^2 + y^2 + z^2 - 12) = 0 \implies 2x^2 + z^2 = 12 \quad (x = y)
+            \end{align*}
+
+            Since $x = y$:
+
+            \begin{align*}
+                xz - \lambda_1 = xz + \lambda_1 &\implies \lambda_1 = 0 \\
+                yz - 2\lambda_2 x = 0 \implies xz = 2\lambda_2 x &\implies 2\lambda_2 = z \\
+                x^2 - 2\lambda_2 z = 0 &\implies x^2 = 2\lambda_2 z
+            \end{align*}
+
+            Substituting into $2x^2 + z^2 = 12$:
+
+            \begin{align*}
+                z^2 + 4\lambda_2 z - 12 &= 0 \\
+                z^2 + 2z^2 - 12 &= 0 \\
+                3z^2 &= 12 \\
+                z^2 = 4 &\implies z = \pm 2 \implies \lambda_2 = \pm 1 \\
+                x^2 = 4 &\implies x = y = \pm 2
+            \end{align*}
         }
     \end{enumerate}
 
@@ -166,6 +252,35 @@ P: Exercise from MacKay.
     For the weighing problem with 10 balls, one of which is heavy, draw out a possible solution to finding the heavy ball in no more than 3 weighings. Now annotate each branch from each weighing with the information gained by following that branch. At each leaf, compute the total information gained for that branch.
 
     \answer{
+        Weigh 3 on each side. \hfill $\log \frac{1}{10}$
+
+        \begin{itemize}
+            \item \textbf{Left.} Weigh 1 [against 1].
+            \begin{itemize}
+                \item Left
+                \item Centre
+                \item Right
+            \end{itemize}
+
+            \item \textbf{Balance} \hfill $\log \frac{1}{4}$ \\
+            Weigh 1 on each.
+            \begin{itemize}
+                \item Left \hfill $\log 1$
+                \item Equal \hfill $\log \frac{1}{2}$
+                \begin{itemize}
+                    \item Left
+                    \item Right
+                \end{itemize}
+                \item Right
+            \end{itemize}
+
+            \item \textbf{Right} \hfill $\log \frac{1}{3}$
+            \begin{itemize}
+                \item Left \hfill $\log 1$
+                \item Right
+                \item Centre
+            \end{itemize}
+        \end{itemize}
     }
 
     \item
@@ -173,6 +288,9 @@ P: Exercise from MacKay.
     [MacKay ex.~4.9] While some people, when they first encounter the weighing problem with 12 balls and the three-outcome balance, think that weighing six balls against six balls is a good first weighing, others say `no, weighing six against six conveys no information at all'. Explain to the second group why they are both right and wrong. Compute the information gained about which is the odd ball, and the information gained about which is the odd ball and whether it is heavy or light.
 
     \answer{
+        In a sense, because we do not know whether the odd ball is heavier or lighter, weighing the six balls against the other 6 dosen't tell in which group of 6 the odd ball is in. To a certain extent then, doing this weighing wouldn't advances us in our goals. 
+
+        However, we should note that when this weighing takes place, it does tell us that if the odd ball is heavy, it must be in one group, and if it is light, it must be in the other. There thus one big of information gained about whether the odd ball is heavy of light, but no additional information about which is in fact the odd ball. 
     }
 
     \item
@@ -180,6 +298,57 @@ P: Exercise from MacKay.
     [MacKay ex.~4.13] You are given 12 balls, all of equal weight except for one, which is either heavier \emph{or} lighter than the others; you do not know which. Using a three-outcome balance, find a strategy that identifies the odd ball, and whether it is heavy or light, in three weighings. Then generalise to the $N$-ball problem: show that in $W$ weighings the odd ball, and whether it is heavy or light, can be identified from among $N = (3^W - 3)/2$ balls.
 
     \answer{
+        \textbf{12 balls.} Weigh 4 on each side.
+
+        \begin{itemize}
+            \item \textbf{Left lighter.} 4 are equal, one of the 4 is heavier or one of the 4 is lighter, i.e.\ 4 possibly lighter, 4 possibly heavier, 4 std. 8 possibilities, split 3, 3, 2.
+
+            Weigh 2 heavy + 2 light on one side, 1 light on the other.
+            \begin{itemize}
+                \item \textbf{Left light:} one of the left 2 is light. Weigh: compare the two.
+                \item \textbf{Right light:} either the right 1 is light, or one of the left 2 is heavy.
+                \item \textbf{Equal:} either 1 heavy or 2 light. Weigh 1 + 1 with 2 std.
+                \begin{itemize}
+                    \item Equal: know.
+                    \item Left light: light.
+                    \item Right light: heavy is heavy.
+                \end{itemize}
+            \end{itemize}
+
+            \item \textbf{Right lighter.}
+
+            \item \textbf{Equal.} One of 4 is odd; know the other 8 are equal. 8 possibilities.
+
+            Weigh 2 \& 1 with 1 std.
+            \begin{itemize}
+                \item \textbf{Left lighter:} either the 1 is heavy or one of the 2 is lighter. Weigh 2 std against 1 + 1 from the 2.
+                \begin{itemize}
+                    \item Heavy: the 1 is odd.
+                    \item Light: the one from the 2 is light.
+                    \item Equal: the left-out one is odd.
+                \end{itemize}
+                \item \textbf{Right lighter:} either the 1 is light or one of the 2 is heavy.
+                \item \textbf{Equal} --- done.
+            \end{itemize}
+        \end{itemize}
+
+        \textbf{$N$-ball problem.} $N = \frac{3^W - 3}{2}$.
+
+        Given $N$ balls, we can split into $\lceil \frac{N}{3} \rceil$, $\lceil \frac{N}{3} \rceil$ and $N - 2\lceil \frac{N}{3} \rceil$.
+
+        One weighing of $\lceil \frac{N}{3} \rceil$ against $\lceil \frac{N}{3} \rceil$ gets us lighter, heavier or equal.
+        \begin{itemize}
+            \item Lighter \& heavier: again split into $\dfrac{\left( \frac{N \times 2}{3} \right)}{3}$ possibilities.
+            \item Equal case: at worst, the same problem with $\frac{N}{3}$ balls.
+        \end{itemize}
+
+        We can suppose in the odd case we again keep splitting.
+
+        \[
+            1 = \frac{N \times 2}{3^W}
+        \]
+
+        unsure where they get the -3. 
     }
 
     \item
@@ -187,6 +356,7 @@ P: Exercise from MacKay.
     [MacKay ex.~5.19] Is the code $\{00, 11, 0101, 111, 1010, 100100, 0110\}$ uniquely decodable? If not, give an example of an ambiguous message.
 
     \answer{
+        Clearly not. 111111 is ambigiuous 
     }
 
     \item
@@ -194,6 +364,7 @@ P: Exercise from MacKay.
     [MacKay ex.~5.20] Is the ternary code $\{00, 012, 0110, 0112, 100, 201, 212, 22\}$ uniquely decodable?
 
     \answer{
+        We note that none of the terms is a prefix of any of the other terms, so this must be uniquely decodable. 
     }
 
     \item
@@ -201,6 +372,12 @@ P: Exercise from MacKay.
     [MacKay ex.~5.21] Make Huffman codes for $X^2$, $X^3$ and $X^4$ where $\mathcal{A}_X = \{0, 1\}$ and $\mathcal{P}_X = \{0.9, 0.1\}$. Compute their expected lengths and compare them with the entropies $H(X^2)$, $H(X^3)$ and $H(X^4)$. Repeat this exercise for $X^2$ and $X^4$ where $\mathcal{P}_X = \{0.6, 0.4\}$.
 
     \answer{
+        For $X^2$, we get the following code: $\{00: 0, 01: 11, 10: 001, 11: 101\}$. The expected length is 1.29. The entropy of $X^2$ is 0.938.
+
+        For $X^3$, we get the following code: $\{000: 0, 001: 001, 010: 101, 100: 011, 011: 01111, 110: 11111, 101: 00111, 111: 10111 \}$. The expected length is 1.598. The entropy of $X^3$ is 1.407.
+
+        For $X^4$, we get the following code: $\{ 0000: 0, 0001: 011, 0010: 111, 0100: 101, 1000: 0001, 0011: 0011001, 0110: 1011001, 1100: 0111001, 1001: 1111001, 1010: 101001, 0101: 0001001, 1110: 011001001, 1101: 111001001, 1011: 1001001001, 0111: 0001001001, 1111: 1001001001\}$. The expected length is: 1.9702. The entropy of $X^4$ is 1.876. 
+
     }
 
     \item
@@ -208,6 +385,7 @@ P: Exercise from MacKay.
     Is it possible for two people to use the same set of alphabet probabilities to produce Huffman codes with a differing set of lengths?
 
     \answer{
+        Yes. Consider the scenario where when we are constructing the tree for the Huffman code. Suppose then that there are 4 remaining `terms', where 3 of them are equal probability and lower than the remaining. Further suppoose that 1 of the 3 terms already have existing length N when read from the left, and the other 2 have length 0 when read. We can then make the choice to merge the 2 of length 0, or to merge 1 of length 0 with the 1 of length N. This gives us a eventual code where we could get lengths 1, 2, 3, N+3, or 1, 3, 3, N+2.  
     }
 
     \item
@@ -222,6 +400,9 @@ P: Exercise from MacKay.
     Does this produce instantaneous codes? How does it compare to Huffman coding? (Note the full analysis of the average codeword length is non-trivial and not required. But that shouldn't stop you trying.)
 
     \answer{
+        Apparently an instantaneous code is just another way of saying a prefix code. Given this, yes, this would produce a prefix code. We note that whenever we partition the codewords, since we stop when there is only one symbol left in each partition, there is no way for a codeword to be the prefix of any other codeword. 
+
+        This seems like a sort of variation of Huffman coding, where rather than constructing the subsets from the bottom up, we split at the top, and then work down. I would imagine that because of the flexibility with the split of subsets, we might expect slightly better results but be far more difficult to implement. 
     }
 \end{enumerate}
 
